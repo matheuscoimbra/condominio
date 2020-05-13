@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: ${APP_ENV:dev}
+  application:
+    name: '@project.artifactId@'
+  data:
+    mongodb:
+      database: condominio-apt
+      uri: ${MONGO_URI:mongodb://192.168.99.100:32768}
+
+
+
+server:
+  port: ${SERVER_PORT:8081}
+
+
+

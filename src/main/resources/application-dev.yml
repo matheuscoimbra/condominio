@@ -1,0 +1,6 @@
+spring:
+  profiles: dev
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: info
+    org.springframework.data.mongodb.repository.Query: debug
