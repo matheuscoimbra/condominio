@@ -5,6 +5,7 @@ import com.br.condomio.apt.domain.Inquilino;
 import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.dto.ApartamentoDTO;
+import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.dto.NotificacaoDTO;
 import com.br.condomio.apt.repository.ApartamentoRepository;
@@ -102,5 +103,22 @@ public class ApartamentoService {
         }else{
             throw new RuntimeException("Apartamento sem inquilino");
         }
+    }
+
+    public List<ApartamentoDTO> changeBetWeen(ChangeBetweenDTO changeBetweenDTO) {
+        var aptFrom =  repository.findById(changeBetweenDTO.getGetApartementoIdFrom()).get();
+        var aptTo =  repository.findById(changeBetweenDTO.getGetApartementoIdFrom()).get();
+
+
+        var inquilinoTo = aptTo==null?null:aptTo.getInquilino();
+        var inquilinoFrom = aptFrom==null?null:aptFrom.getInquilino();
+
+        aptTo.setInquilino(inquilinoFrom);
+        aptFrom.setInquilino(inquilinoTo);
+
+        repository.saveAll(List.of(aptTo,aptFrom));
+
+        return blocoRepository.findById(changeBetweenDTO.getBlocoId()).get().getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+
     }
 }

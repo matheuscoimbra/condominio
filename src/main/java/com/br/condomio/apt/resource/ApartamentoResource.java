@@ -5,6 +5,7 @@ import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Condominio;
 import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.dto.ApartamentoDTO;
+import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.dto.NotificacaoDTO;
 import com.br.condomio.apt.service.ApartamentoService;
@@ -28,6 +29,11 @@ public class ApartamentoResource {
     public ResponseEntity<List<ApartamentoDTO>> getAllByBloco(@RequestParam("id") String id){
 
        return ResponseEntity.ok(service.getAllByBloco(id));
+    }
+
+    @PostMapping("change/between")
+    public ResponseEntity<List<ApartamentoDTO>> changeBetween(@RequestBody ChangeBetweenDTO changeBetweenDTO){
+        return ResponseEntity.ok(service.changeBetWeen(changeBetweenDTO));
     }
 
     @PatchMapping("change/{id}")
