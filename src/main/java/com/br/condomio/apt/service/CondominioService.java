@@ -68,4 +68,15 @@ public class CondominioService {
     }
 
 
+    public void changeName(String id, String name) {
+        repository.findById(id).ifPresentOrElse(
+
+                apartamento -> {
+
+                    apartamento.setNome(name);
+                    repository.save(apartamento);
+                },
+
+                ()->{throw new RuntimeException();});
+    }
 }
