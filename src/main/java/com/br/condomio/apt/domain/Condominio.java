@@ -1,14 +1,20 @@
 package com.br.condomio.apt.domain;
 
 import com.br.condomio.apt.domain.enums.Arquitetura;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 @Document(collection = "condominio")
 public class Condominio implements Serializable {
@@ -29,18 +35,18 @@ public class Condominio implements Serializable {
 
     private Porteiro porteiro;
 
-    @NotEmpty(message = "Informe a arquitetura")
+    @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;
 
     private List<Bloco> blocos;
 
-    @NotEmpty(message = "Informe a quantidade de BLOCO/PREDIO")
+    @NotNull(message = "Informe a quantidade de BLOCO/PREDIO")
     private Integer quantidadeArquitetura;
 
-    @NotEmpty(message = "Informe a quantidade de andares por BLOCO/PREDIO")
+    @NotNull(message = "Informe a quantidade de andares por BLOCO/PREDIO")
     private Integer quantidadeAndar;
 
-    @NotEmpty(message = "Informe a quantidade de apartamentos por BLOCO/PREDIO")
+    @NotNull(message = "Informe a quantidade de apartamentos por BLOCO/PREDIO")
     private Integer quantidadeApartamento;
 
     private String start;

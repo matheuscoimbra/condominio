@@ -10,6 +10,8 @@ import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.dto.NotificacaoDTO;
 import com.br.condomio.apt.repository.ApartamentoRepository;
 import com.br.condomio.apt.repository.BlocoRepository;
+import com.br.condomio.apt.repository.CondominioRepository;
+import com.br.condomio.apt.repository.InquilinoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,12 @@ public class ApartamentoService {
     private ApartamentoRepository repository;
 
     @Autowired
+    private CondominioRepository condominioRepository;
+
+    @Autowired
+    private InquilinoRepository inquilinoRepository;
+
+    @Autowired
     private ModelMapper mapper;
 
     public List<ApartamentoDTO> getAllByBloco(String id) {
@@ -39,10 +48,13 @@ public class ApartamentoService {
         repository.findById(id).ifPresentOrElse(
 
                 apartamento -> {
-
-                    var inquilino = mapper.map(inquilinoDTO, Inquilino.class);
-                    inquilino.setStatusInquilino(StatusInquilino.ANALISE);
-                    apartamento.setInquilino(inquilino);
+                    var condominio = condominioRepository.findCondominioByCnpj(apartamento.getCondomioCnpj());
+                    var inquilino = inquilinoRepository.findById(inquilinoDTO.getId()).get();
+                    inquilino.setStatusInquilino(List.of(Map.of(id,StatusInquilino.ANALISE)));
+                    inquilino.setApartamentosCondList(List.of(Map.of(condominio.get().getNome(),apartamento.getId())));
+                    inquilinoRepository.save(inquilino);
+                    inquilinoDTO.setStatusInquilino(StatusInquilino.ANALISE);
+                    apartamento.setInquilino(inquilinoDTO);
                     apartamento.setNotificacaos(new ArrayList<>());
                     repository.save(apartamento);
                 },

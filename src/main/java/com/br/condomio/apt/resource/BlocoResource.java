@@ -19,7 +19,7 @@ public class BlocoResource {
     private BlocoService service;
 
     @GetMapping()
-    public ResponseEntity<List<BlocoDTO>> getAll(@RequestParam("id") String id){
+    public ResponseEntity<List<BlocoDTO>> getAll(@RequestParam("condominio") String id){
 
        return ResponseEntity.ok(service.getAll(id));
     }

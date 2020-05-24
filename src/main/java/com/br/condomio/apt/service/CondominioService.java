@@ -1,13 +1,21 @@
 package com.br.condomio.apt.service;
 
+import com.br.condomio.apt.domain.Admin;
 import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Bloco;
 import com.br.condomio.apt.domain.Condominio;
+import com.br.condomio.apt.jwt.UserSS;
+import com.br.condomio.apt.repository.AdminRepository;
 import com.br.condomio.apt.repository.ApartamentoRepository;
 import com.br.condomio.apt.repository.BlocoRepository;
 import com.br.condomio.apt.repository.CondominioRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,9 +33,16 @@ public class CondominioService {
     @Autowired
     private BlocoRepository blocoRepository;
 
+    @Autowired
+    private AdminRepository adminRepository;
 
+    @SneakyThrows
     public Condominio save(Condominio condominio){
+        ObjectMapper mapper = new ObjectMapper();
 
+        var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        var obj = mapper.readValue(str,UserSS.class);
+        Admin admin = adminRepository.findAdminByCnpj(obj.getUsername()).get();
         Integer quantidadeBlocos = condominio.getQuantidadeArquitetura();
         Integer quantidadeApartamentos = condominio.getQuantidadeApartamento();
         Integer quantidadeAndares = condominio.getQuantidadeAndar();
@@ -49,7 +64,7 @@ public class CondominioService {
 
                 for (int k = 0; k < quantidadeApartamentos ; k++) {
 
-                    Apartamento apartamento = Apartamento.builder()
+                    Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj())
                             .andar(j+1).nome(String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
                     apartamentoList.add(apartamento);
                 }
@@ -62,9 +77,12 @@ public class CondominioService {
         }
         blocoList = blocoRepository.saveAll(blocoList);
         condominio.setBlocos(blocoList);
-        repository.save(condominio);
+        condominio.setPropietario(admin.getCnpj());
+        var condo = repository.save(condominio);
+        admin.getCondominiosId().add(condo.getId());
+        adminRepository.save(admin);
 
-        return condominio;
+        return condo;
     }
 
 
@@ -78,5 +96,16 @@ public class CondominioService {
                 },
 
                 ()->{throw new RuntimeException();});
+    }
+
+    public List<Condominio> getAllByPropietario(String cnpj) {
+       return repository.findAllByPropietario(cnpj);
+    }
+
+    public List<Condominio> getAllByNome(String nome) {
+        Condominio condominio = Condominio.builder().nome(nome).build();
+        Example<Condominio> example = Example.of(condominio, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase());
+        return repository.findAll(example);
     }
 }

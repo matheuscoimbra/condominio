@@ -1,5 +1,6 @@
 package com.br.condomio.apt.domain;
 
+import com.br.condomio.apt.dto.InquilinoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,9 @@ public class Apartamento {
 
     private Integer andar;
 
-    private Inquilino inquilino;
+    private String condomioCnpj;
+
+    private InquilinoDTO inquilino;
 
     private List<Notificacao> notificacaos = new ArrayList<>();
 
