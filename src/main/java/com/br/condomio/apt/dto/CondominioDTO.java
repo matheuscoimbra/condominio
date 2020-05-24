@@ -1,7 +1,9 @@
-package com.br.condomio.apt.domain;
+package com.br.condomio.apt.dto;
 
+import com.br.condomio.apt.domain.Bloco;
+import com.br.condomio.apt.domain.Porteiro;
+import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.domain.enums.Arquitetura;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +15,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-@Document(collection = "condominio")
-public class Condominio implements Serializable {
+public class CondominioDTO implements Serializable {
 
-    @Id
+
     private String id;
 
     @NotEmpty(message ="Informe o CNPJ")
@@ -29,17 +31,8 @@ public class Condominio implements Serializable {
     @NotEmpty(message = "Informe o nome do condomínio")
     private String nome;
 
-    private Sindico sindico;
-
-    @NotEmpty(message = "Informe o nome do propietário")
-    private String propietario;
-
-    private Porteiro porteiro;
-
     @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;
-
-    private List<Bloco> blocos;
 
     @NotNull(message = "Informe a quantidade de BLOCO/PREDIO")
     private Integer quantidadeArquitetura;

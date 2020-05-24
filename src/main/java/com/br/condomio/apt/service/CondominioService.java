@@ -4,6 +4,7 @@ import com.br.condomio.apt.domain.Admin;
 import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Bloco;
 import com.br.condomio.apt.domain.Condominio;
+import com.br.condomio.apt.dto.CondominioDTO;
 import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.AdminRepository;
 import com.br.condomio.apt.repository.ApartamentoRepository;
@@ -12,6 +13,7 @@ import com.br.condomio.apt.repository.CondominioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -36,10 +38,13 @@ public class CondominioService {
     @Autowired
     private AdminRepository adminRepository;
 
-    @SneakyThrows
-    public Condominio save(Condominio condominio){
-        ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ModelMapper modelMapper;
 
+    @SneakyThrows
+    public Condominio save(CondominioDTO dto){
+        ObjectMapper mapper = new ObjectMapper();
+        var condominio = modelMapper.map(dto,Condominio.class);
         var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         var obj = mapper.readValue(str,UserSS.class);
         Admin admin = adminRepository.findAdminByCnpj(obj.getUsername()).get();

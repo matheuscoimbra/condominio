@@ -3,6 +3,7 @@ package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Condominio;
 import com.br.condomio.apt.dto.BlocoDTO;
+import com.br.condomio.apt.dto.CondominioDTO;
 import com.br.condomio.apt.service.CondominioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class CondominioResource {
     private CondominioService service;
 
     @PostMapping
-    public ResponseEntity<Condominio> save(@RequestBody @Valid Condominio condominio){
+    public ResponseEntity<Condominio> save(@RequestBody @Valid CondominioDTO condominio){
 
        return ResponseEntity.ok(service.save(condominio));
     }
