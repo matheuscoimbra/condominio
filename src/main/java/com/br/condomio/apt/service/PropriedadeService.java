@@ -3,13 +3,16 @@ package com.br.condomio.apt.service;
 import com.br.condomio.apt.domain.Admin;
 import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Bloco;
-import com.br.condomio.apt.domain.Condominio;
+import com.br.condomio.apt.domain.Propriedade;
+import com.br.condomio.apt.domain.enums.Arquitetura;
+import com.br.condomio.apt.dto.BlocoDTO;
 import com.br.condomio.apt.dto.CondominioDTO;
+import com.br.condomio.apt.dto.PredioDTO;
 import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.AdminRepository;
 import com.br.condomio.apt.repository.ApartamentoRepository;
 import com.br.condomio.apt.repository.BlocoRepository;
-import com.br.condomio.apt.repository.CondominioRepository;
+import com.br.condomio.apt.repository.PropriedadeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CondominioService {
+public class PropriedadeService {
 
     @Autowired
-    private CondominioRepository repository;
+    private PropriedadeRepository repository;
 
     @Autowired
     private ApartamentoRepository apartamentoRepository;
@@ -41,13 +44,70 @@ public class CondominioService {
     @Autowired
     private ModelMapper modelMapper;
 
+
     @SneakyThrows
-    public Condominio save(CondominioDTO dto){
+    public Propriedade savePredio(PredioDTO dto){
         ObjectMapper mapper = new ObjectMapper();
-        var condominio = modelMapper.map(dto,Condominio.class);
+        var condominio = modelMapper.map(dto, Propriedade.class);
         var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         var obj = mapper.readValue(str,UserSS.class);
         Admin admin = adminRepository.findAdminByCpf(obj.getUsername()).get();
+        condominio.setQuantidadeApartamento(dto.getQuantidadeSalas());
+        condominio.setArquitetura(Arquitetura.PREDIO);
+        Integer quantidadeApartamentos = condominio.getQuantidadeApartamento();
+        Integer quantidadeAndares = condominio.getQuantidadeAndar();
+        String prefixoBloco = condominio.getArquitetura().getDescricao();
+        String StartAp = condominio.getStart();
+        List<Bloco> blocoList = new ArrayList<>();
+        int leftpad = 0;
+        if( condominio.getStart().equals("00")){
+            leftpad = 1;
+        }
+        if( condominio.getStart().equals("000")){
+            leftpad = 2;
+        }
+
+
+            List<Apartamento> apartamentoList = new ArrayList<>();
+
+            for (int j = 0; j < quantidadeAndares; j++) {
+
+                for (int k = 0; k < quantidadeApartamentos ; k++) {
+
+                    Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj())
+                            .andar(j+1).nome("Sala" +String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
+                    apartamentoList.add(apartamento);
+                }
+
+            }
+            apartamentoList = apartamentoRepository.saveAll(apartamentoList);
+
+            Bloco bloco = Bloco.builder().apartamentos(apartamentoList).nome(prefixoBloco+"_1").build();
+            blocoList.add(bloco);
+
+        blocoList = blocoRepository.saveAll(blocoList);
+        condominio.setBlocos(blocoList);
+        condominio.setPropietario(admin.getCpf());
+        var condo = repository.save(condominio);
+        admin.getCondominiosId().add(condo.getId());
+        adminRepository.save(admin);
+
+        return condo;
+    }
+
+
+
+
+
+    @SneakyThrows
+    public Propriedade save(BlocoDTO dto){
+        ObjectMapper mapper = new ObjectMapper();
+        var condominio = modelMapper.map(dto, Propriedade.class);
+        var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        var obj = mapper.readValue(str,UserSS.class);
+        Admin admin = adminRepository.findAdminByCpf(obj.getUsername()).get();
+        condominio.setArquitetura(Arquitetura.BLOCO);
+        condominio.setQuantidadeArquitetura(dto.getQuantidadeBlocos());
         Integer quantidadeBlocos = condominio.getQuantidadeArquitetura();
         Integer quantidadeApartamentos = condominio.getQuantidadeApartamento();
         Integer quantidadeAndares = condominio.getQuantidadeAndar();
@@ -103,13 +163,13 @@ public class CondominioService {
                 ()->{throw new RuntimeException();});
     }
 
-    public List<Condominio> getAllByPropietario(String cnpj) {
+    public List<Propriedade> getAllByPropietario(String cnpj) {
        return repository.findAllByPropietario(cnpj);
     }
 
-    public List<Condominio> getAllByNome(String nome) {
-        Condominio condominio = Condominio.builder().nome(nome).build();
-        Example<Condominio> example = Example.of(condominio, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+    public List<Propriedade> getAllByNome(String nome) {
+        Propriedade propriedade = Propriedade.builder().nome(nome).build();
+        Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
         return repository.findAll(example);
     }

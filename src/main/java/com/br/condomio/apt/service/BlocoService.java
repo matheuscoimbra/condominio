@@ -1,11 +1,9 @@
 package com.br.condomio.apt.service;
 
-import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Bloco;
-import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.BlocoDTO;
 import com.br.condomio.apt.repository.BlocoRepository;
-import com.br.condomio.apt.repository.CondominioRepository;
+import com.br.condomio.apt.repository.PropriedadeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 public class BlocoService {
 
     @Autowired
-    private CondominioRepository condominioRepository;
+    private PropriedadeRepository propriedadeRepository;
 
     @Autowired
     private BlocoRepository repository;
@@ -26,7 +24,7 @@ public class BlocoService {
     private ModelMapper mapper;
 
     public List<BlocoDTO> getAll(String condominioId) {
-        return condominioRepository.findById(condominioId).get().getBlocos().stream().map(this::toDTO).collect(Collectors.toList());
+        return propriedadeRepository.findById(condominioId).get().getBlocos().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public BlocoDTO toDTO(Bloco bloco){

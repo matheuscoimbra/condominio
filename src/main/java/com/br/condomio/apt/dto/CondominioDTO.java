@@ -22,20 +22,14 @@ import java.util.List;
 @Data
 public class CondominioDTO implements Serializable {
 
-
-    private String id;
-
     @NotEmpty(message ="Informe o CNPJ")
     private String cnpj;
 
     @NotEmpty(message = "Informe o nome do condomínio")
     private String nome;
 
-    @NotNull(message = "Informe a arquitetura")
-    private Arquitetura arquitetura;
-
-    @NotNull(message = "Informe a quantidade de BLOCO/PREDIO")
-    private Integer quantidadeArquitetura;
+    @NotNull(message = "Informe a quantidade de BLOCO")
+    private Integer quantidadeBlocos;
 
     @NotNull(message = "Informe a quantidade de andares por BLOCO/PREDIO")
     private Integer quantidadeAndar;

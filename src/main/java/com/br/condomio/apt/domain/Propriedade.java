@@ -17,8 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Data
-@Document(collection = "condominio")
-public class Condominio implements Serializable {
+@Document(collection = "propriedade")
+public class Propriedade implements Serializable {
 
     @Id
     private String id;

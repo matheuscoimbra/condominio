@@ -1,18 +1,12 @@
 package com.br.condomio.apt.resource;
 
 
-import com.br.condomio.apt.domain.Apartamento;
-import com.br.condomio.apt.domain.Condominio;
-import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.dto.NotificacaoDTO;
 import com.br.condomio.apt.service.ApartamentoService;
-import com.br.condomio.apt.service.CondominioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
