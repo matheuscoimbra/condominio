@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface AdminRepository extends MongoRepository<Admin, String> {
 
-    Optional<Admin> findAdminByCnpjAndAndSenha(String cnpj, String senha);
-    Optional<Admin> findAdminByCnpj(String cnpj);
+    Optional<Admin> findAdminByCpfAndAndSenha(String cnpj, String senha);
+    Optional<Admin> findAdminByCpf(String cnpj);
 }

@@ -1,6 +1,7 @@
 package com.br.condomio.apt.jwt;
 
 import com.br.condomio.apt.domain.Admin;
+import com.br.condomio.apt.domain.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +23,7 @@ public class JwtService {
     @Value("${security.jwt.chave-assinatura}")
     private String chaveAssinatura;
 
-    public String gerarToken(Admin usuario ){
+    public String gerarToken(Usuario usuario ){
         long expString = Long.valueOf(expiracao);
         LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
         Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
@@ -30,11 +31,28 @@ public class JwtService {
 
         return Jwts
                 .builder()
-                .setSubject(usuario.getCnpj())
+                .setId("admin")
+                .setSubject(usuario.getCpf())
                 .setExpiration(data)
                 .signWith( SignatureAlgorithm.HS512, chaveAssinatura )
                 .compact();
     }
+
+    public String gerarTokenSindico(Usuario usuario ){
+        long expString = Long.valueOf(expiracao);
+        LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
+        Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
+        Date data = Date.from(instant);
+
+        return Jwts
+                .builder()
+                .setId("sindico")
+                .setSubject(usuario.getCpf())
+                .setExpiration(data)
+                .signWith( SignatureAlgorithm.HS512, chaveAssinatura )
+                .compact();
+    }
+
 
     private Claims obterClaims( String token ) throws ExpiredJwtException {
         return Jwts
@@ -55,6 +73,10 @@ public class JwtService {
         }catch (Exception e){
             return false;
         }
+    }
+
+    public String obterId(String token) throws ExpiredJwtException{
+        return (String) obterClaims(token).getId();
     }
 
     public String obterLoginUsuario(String token) throws ExpiredJwtException{

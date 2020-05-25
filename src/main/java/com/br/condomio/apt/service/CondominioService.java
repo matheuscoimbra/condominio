@@ -47,7 +47,7 @@ public class CondominioService {
         var condominio = modelMapper.map(dto,Condominio.class);
         var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         var obj = mapper.readValue(str,UserSS.class);
-        Admin admin = adminRepository.findAdminByCnpj(obj.getUsername()).get();
+        Admin admin = adminRepository.findAdminByCpf(obj.getUsername()).get();
         Integer quantidadeBlocos = condominio.getQuantidadeArquitetura();
         Integer quantidadeApartamentos = condominio.getQuantidadeApartamento();
         Integer quantidadeAndares = condominio.getQuantidadeAndar();
@@ -82,7 +82,7 @@ public class CondominioService {
         }
         blocoList = blocoRepository.saveAll(blocoList);
         condominio.setBlocos(blocoList);
-        condominio.setPropietario(admin.getCnpj());
+        condominio.setPropietario(admin.getCpf());
         var condo = repository.save(condominio);
         admin.getCondominiosId().add(condo.getId());
         adminRepository.save(admin);

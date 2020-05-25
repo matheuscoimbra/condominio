@@ -4,6 +4,7 @@ package com.br.condomio.apt.config;
 import com.br.condomio.apt.jwt.JwtAuthFilter;
 import com.br.condomio.apt.jwt.JwtService;
 import com.br.condomio.apt.service.AdminService;
+import com.br.condomio.apt.service.SindicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	private AdminService usuarioService;
 	@Autowired
 	private JwtService jwtService;
+	@Autowired
+	private SindicoService sindicoService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder(){
@@ -39,7 +42,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public OncePerRequestFilter jwtFilter(){
-		return new JwtAuthFilter(jwtService, usuarioService);
+		return new JwtAuthFilter(jwtService, usuarioService,sindicoService);
 	}
 
 	@Override

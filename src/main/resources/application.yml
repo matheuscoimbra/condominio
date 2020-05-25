@@ -14,7 +14,10 @@ java:
 server:
   port: ${SERVER_PORT:8081}
 
-
+cloudinary:
+  api_key: 196455977573897
+  api_secret: hvC6b0mb_7jQQbsKgHyD9J9auZE
+  cloud_name: defdl1xal
 
 security:
   jwt:

@@ -1,6 +1,7 @@
 package com.br.condomio.apt.jwt;
 
 import com.br.condomio.apt.service.AdminService;
+import com.br.condomio.apt.service.SindicoService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +18,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private JwtService jwtService;
     private AdminService usuarioService;
+    private SindicoService sindicoService;
 
-    public JwtAuthFilter( JwtService jwtService, AdminService usuarioService ) {
+    public JwtAuthFilter( JwtService jwtService, AdminService usuarioService,SindicoService sindicoService ) {
         this.jwtService = jwtService;
         this.usuarioService = usuarioService;
+        this.sindicoService = sindicoService;
     }
 
     @Override
@@ -37,7 +40,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if(isValid){
                 String loginUsuario = jwtService.obterLoginUsuario(token);
-                UserDetails usuario = usuarioService.loadUserByUsername(loginUsuario);
+                UserDetails usuario = null;
+                if(jwtService.obterId(token).equals("admin")) {
+                     usuario = usuarioService.loadUserByUsername(loginUsuario);
+                }
+                if(jwtService.obterId(token).equals("sindico")){
+                     usuario = sindicoService.loadUserByCpf(loginUsuario);
+                }
                 UsernamePasswordAuthenticationToken user = new
                         UsernamePasswordAuthenticationToken(usuario,null,
                         usuario.getAuthorities());

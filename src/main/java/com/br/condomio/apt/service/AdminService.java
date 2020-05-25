@@ -1,9 +1,6 @@
 package com.br.condomio.apt.service;
 
-import com.br.condomio.apt.domain.Admin;
-import com.br.condomio.apt.domain.Apartamento;
-import com.br.condomio.apt.domain.Inquilino;
-import com.br.condomio.apt.domain.Notificacao;
+import com.br.condomio.apt.domain.*;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ChangeBetweenDTO;
@@ -50,7 +47,7 @@ public class AdminService implements UserDetailsService {
 
 
     public UserDetails autenticar( Admin usuario ){
-        UserDetails user = loadUserByUsername(usuario.getCnpj());
+        UserDetails user = loadUserByUsername(usuario.getCpf());
         boolean senhasBatem = encoder.matches( usuario.getSenha(), user.getPassword() );
 
         if(senhasBatem){
@@ -61,7 +58,7 @@ public class AdminService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Admin usuario = repository.findAdminByCnpj(username)
+        Admin usuario = repository.findAdminByCpf(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
 
         String[] roles = usuario.isAdmin() ?
@@ -69,7 +66,7 @@ public class AdminService implements UserDetailsService {
 
         return User
                 .builder()
-                .username(usuario.getCnpj())
+                .username(usuario.getCpf())
                 .password(usuario.getSenha())
                 .roles(roles)
                 .build();

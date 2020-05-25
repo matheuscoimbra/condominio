@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CredenciaisDTO {
-    private String cnpj;
+    private String cpf;
     private String senha;
+    private String telefone;
 }
