@@ -20,6 +20,8 @@ public class Bloco {
     @Id
     private String id;
 
+    private String buscadorBloco;
+
     private String nome;
     @DBRef
     private List<Apartamento> apartamentos;

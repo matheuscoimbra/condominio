@@ -29,6 +29,8 @@ public class Apartamento {
 
     private InquilinoDTO inquilino;
 
+    private String buscadorBloco;
+
     private List<Notificacao> notificacaos = new ArrayList<>();
 
 

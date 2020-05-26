@@ -10,6 +10,7 @@ import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ public class PropriedadeService {
 
     @SneakyThrows
     public Propriedade savePredio(PredioDTO dto){
+
+
         ObjectMapper mapper = new ObjectMapper();
         var condominio = modelMapper.map(dto, Propriedade.class);
         var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
@@ -65,6 +68,7 @@ public class PropriedadeService {
             leftpad = 2;
         }
 
+        String hash = RandomStringUtils.random(6, true, true);
 
             List<Apartamento> apartamentoList = new ArrayList<>();
 
@@ -72,7 +76,7 @@ public class PropriedadeService {
 
                 for (int k = 0; k < quantidadeApartamentos ; k++) {
 
-                    Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj())
+                    Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj()).buscadorBloco(hash)
                             .andar(j+1).nome("Sala" +String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
                     apartamentoList.add(apartamento);
                 }
@@ -80,7 +84,7 @@ public class PropriedadeService {
             }
             apartamentoList = apartamentoRepository.saveAll(apartamentoList);
 
-            Bloco bloco = Bloco.builder().apartamentos(apartamentoList).nome(prefixoBloco+"_1").build();
+            Bloco bloco = Bloco.builder().buscadorBloco(hash).apartamentos(apartamentoList).nome(prefixoBloco+"_1").build();
             blocoList.add(bloco);
 
         blocoList = blocoRepository.saveAll(blocoList);
@@ -122,12 +126,13 @@ public class PropriedadeService {
 
         for (int i = 0; i < quantidadeBlocos; i++) {
             List<Apartamento> apartamentoList = new ArrayList<>();
+            String hash = RandomStringUtils.random(6, true, true);
 
             for (int j = 0; j < quantidadeAndares; j++) {
 
                 for (int k = 0; k < quantidadeApartamentos ; k++) {
 
-                    Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj())
+                    Apartamento apartamento = Apartamento.builder().buscadorBloco(hash).condomioCnpj(condominio.getCnpj())
                             .andar(j+1).nome(String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
                     apartamentoList.add(apartamento);
                 }
@@ -135,7 +140,7 @@ public class PropriedadeService {
             }
             apartamentoList = apartamentoRepository.saveAll(apartamentoList);
 
-            Bloco bloco = Bloco.builder().apartamentos(apartamentoList).nome(prefixoBloco+(i+1)).build();
+            Bloco bloco = Bloco.builder().apartamentos(apartamentoList).buscadorBloco(hash).nome(prefixoBloco+(i+1)).build();
             blocoList.add(bloco);
         }
         blocoList = blocoRepository.saveAll(blocoList);

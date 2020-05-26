@@ -32,7 +32,7 @@ public class ApartamentoResource {
         return ResponseEntity.ok(service.changeBetWeen(changeBetweenDTO));
     }
 
-    @GetMapping(value = "/id")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Apartamento> buscaPorId(@PathVariable("id") String id){
 
         return ResponseEntity.ok(service.findById(id));

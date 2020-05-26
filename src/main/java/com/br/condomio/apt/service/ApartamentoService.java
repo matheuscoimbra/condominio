@@ -60,12 +60,13 @@ public class ApartamentoService {
                 apartamento -> {
                     var condominio = propriedadeRepository.findPropriedadeByCnpj(apartamento.getCondomioCnpj());
                     var inquilino = inquilinoRepository.findById(inquilinoDTO.getId()).get();
-                 //   var bloco = blocoService.getByApt(id);
+                    var bloco = blocoRepository.findBlocoByBuscadorBloco(apartamento.getBuscadorBloco());
                     InquilinoSituacao situacao = InquilinoSituacao.builder().
                             apartamentoId(id)
                             .apartamentoNome(apartamento.getNome())
                             .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
                             .statusInquilino(StatusInquilino.ANALISE)
+                            .blocoId(bloco.get().getId())
                             .condominio(condominio.get().getNome())
                             .condominioId(condominio.get().getId())
                             .build();
@@ -73,6 +74,7 @@ public class ApartamentoService {
                     Aprovacao aprovacao = Aprovacao.builder().
                             inquilinoId(inquilino.getId())
                             .inquilinoNome(inquilino.getNome())
+                            .telefone(inquilino.getTelefone())
                             .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
                             .statusInquilino(StatusInquilino.ANALISE).
                             build();
@@ -89,6 +91,8 @@ public class ApartamentoService {
 
                     inquilinoRepository.save(inquilino);
                     inquilinoDTO.setStatusInquilino(StatusInquilino.ANALISE);
+                    inquilinoDTO.setNome(inquilino.getNome());
+                    inquilinoDTO.setTelefone(inquilino.getTelefone());
                     apartamento.setInquilino(inquilinoDTO);
                     apartamento.setNotificacaos(new ArrayList<>());
                     repository.save(apartamento);

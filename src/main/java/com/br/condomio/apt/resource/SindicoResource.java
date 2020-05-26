@@ -41,7 +41,7 @@ public class SindicoResource {
         return ResponseEntity.created(null).body(service.save(sindico));
     }
 
-    @GetMapping(value = "/id")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Sindico> buscaPorId(@PathVariable("id") String id){
 
         return ResponseEntity.ok(service.getById(id));

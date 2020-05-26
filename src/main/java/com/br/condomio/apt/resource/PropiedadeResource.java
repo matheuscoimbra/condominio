@@ -38,7 +38,7 @@ public class PropiedadeResource {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/id")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Propriedade> buscaPorId(@PathVariable("id") String id){
 
         return ResponseEntity.ok(service.getById(id));
