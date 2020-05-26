@@ -1,16 +1,15 @@
 package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.Apartamento;
+import com.br.condomio.apt.domain.Aprovacao;
+import com.br.condomio.apt.domain.InquilinoSituacao;
 import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.dto.NotificacaoDTO;
-import com.br.condomio.apt.repository.ApartamentoRepository;
-import com.br.condomio.apt.repository.BlocoRepository;
-import com.br.condomio.apt.repository.PropriedadeRepository;
-import com.br.condomio.apt.repository.InquilinoRepository;
+import com.br.condomio.apt.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,16 @@ public class ApartamentoService {
     private BlocoRepository blocoRepository;
 
     @Autowired
+    private BlocoService blocoService;
+
+    @Autowired
+    private SindicoRepository sindicoRepository;
+
+    @Autowired
     private ApartamentoRepository repository;
+
+    @Autowired
+    private AprovacaoRepository aprovacaoRepository;
 
     @Autowired
     private PropriedadeRepository propriedadeRepository;
@@ -38,6 +46,10 @@ public class ApartamentoService {
     @Autowired
     private ModelMapper mapper;
 
+    public Apartamento findById(String id){
+        return repository.findById(id).get();
+    }
+
     public List<ApartamentoDTO> getAllByBloco(String id) {
         return blocoRepository.findById(id).get().getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -46,10 +58,35 @@ public class ApartamentoService {
         repository.findById(id).ifPresentOrElse(
 
                 apartamento -> {
-                    var condominio = propriedadeRepository.findCondominioByCnpj(apartamento.getCondomioCnpj());
+                    var condominio = propriedadeRepository.findPropriedadeByCnpj(apartamento.getCondomioCnpj());
                     var inquilino = inquilinoRepository.findById(inquilinoDTO.getId()).get();
-                    inquilino.setStatusInquilino(List.of(Map.of(id,StatusInquilino.ANALISE)));
-                    inquilino.setApartamentosCondList(List.of(Map.of(condominio.get().getNome(),apartamento.getId())));
+                 //   var bloco = blocoService.getByApt(id);
+                    InquilinoSituacao situacao = InquilinoSituacao.builder().
+                            apartamentoId(id)
+                            .apartamentoNome(apartamento.getNome())
+                            .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
+                            .statusInquilino(StatusInquilino.ANALISE)
+                            .condominio(condominio.get().getNome())
+                            .condominioId(condominio.get().getId())
+                            .build();
+
+                    Aprovacao aprovacao = Aprovacao.builder().
+                            inquilinoId(inquilino.getId())
+                            .inquilinoNome(inquilino.getNome())
+                            .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
+                            .statusInquilino(StatusInquilino.ANALISE).
+                            build();
+                    var apr = aprovacaoRepository.save(aprovacao);
+
+                    var sindico = sindicoRepository.findById(condominio.get().getSindico().getId()).get();
+
+                    sindico.getAprovacaos().add(apr);
+
+                    sindicoRepository.save(sindico);
+
+
+                    inquilino.getInquilinoSituacaos().add(situacao);
+
                     inquilinoRepository.save(inquilino);
                     inquilinoDTO.setStatusInquilino(StatusInquilino.ANALISE);
                     apartamento.setInquilino(inquilinoDTO);

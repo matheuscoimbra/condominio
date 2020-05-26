@@ -1,6 +1,7 @@
 package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Admin;
+import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.dto.CredenciaisDTO;
 import com.br.condomio.apt.dto.SindicoDTO;
@@ -16,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -43,6 +41,12 @@ public class SindicoResource {
         return ResponseEntity.created(null).body(service.save(sindico));
     }
 
+    @GetMapping(value = "/id")
+    public ResponseEntity<Sindico> buscaPorId(@PathVariable("id") String id){
+
+        return ResponseEntity.ok(service.getById(id));
+    }
+
     @PostMapping("/login")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){
         try{
@@ -50,7 +54,7 @@ public class SindicoResource {
             UserDetails usuarioAutenticado = service.autenticar(credenciais);
             Sindico sindico = service.findByTelefone(credenciais.getTelefone());
             String token = jwtService.gerarTokenSindico(sindico);
-            return new TokenDTO(sindico.getTelefone(), token);
+            return new TokenDTO(service.getById(sindico.getId()), token);
         } catch (UsernameNotFoundException | SenhaInvalidaException e ){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

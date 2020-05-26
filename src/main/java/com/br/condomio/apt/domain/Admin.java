@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +17,9 @@ import java.util.List;
 @Data
 @Document(collection = "admin")
 public class Admin extends Usuario{
+
+    @Id
+    private String id;
 
     @NotEmpty( message = "Informe o nome")
     private String nome;

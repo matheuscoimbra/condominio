@@ -1,18 +1,13 @@
 package com.br.condomio.apt.service;
 
-import com.br.condomio.apt.domain.Admin;
-import com.br.condomio.apt.domain.Apartamento;
-import com.br.condomio.apt.domain.Bloco;
-import com.br.condomio.apt.domain.Propriedade;
+import com.br.condomio.apt.domain.*;
 import com.br.condomio.apt.domain.enums.Arquitetura;
+import com.br.condomio.apt.domain.enums.PropriedadeSindico;
 import com.br.condomio.apt.dto.BlocoDTO;
 import com.br.condomio.apt.dto.CondominioDTO;
 import com.br.condomio.apt.dto.PredioDTO;
 import com.br.condomio.apt.jwt.UserSS;
-import com.br.condomio.apt.repository.AdminRepository;
-import com.br.condomio.apt.repository.ApartamentoRepository;
-import com.br.condomio.apt.repository.BlocoRepository;
-import com.br.condomio.apt.repository.PropriedadeRepository;
+import com.br.condomio.apt.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +26,9 @@ public class PropriedadeService {
 
     @Autowired
     private PropriedadeRepository repository;
+
+    @Autowired
+    private SindicoRepository sindicoRepository;
 
     @Autowired
     private ApartamentoRepository apartamentoRepository;
@@ -165,6 +163,34 @@ public class PropriedadeService {
 
     public List<Propriedade> getAllByPropietario(String cnpj) {
        return repository.findAllByPropietario(cnpj);
+    }
+
+    public void saveSindicoPropriedade(String idSindico, String idPropriedade){
+
+        var propriedade = getById(idPropriedade);
+
+        var sindico = sindicoRepository.findById(idSindico).get();
+
+        SindicoProp sindicoProp = new SindicoProp();
+        sindicoProp.setId(sindico.getId());
+        sindicoProp.setNome(sindico.getNome());
+
+        PropriedadeSindico propriedadeSindico = new PropriedadeSindico();
+        propriedadeSindico.setCnpj(propriedade.getCnpj());
+        propriedadeSindico.setNome(propriedade.getNome());
+        propriedadeSindico.setId(propriedade.getId());
+
+        propriedade.setSindico(sindicoProp);
+        sindico.getPropriedadeSindico().add(propriedadeSindico);
+
+        repository.save(propriedade);
+        sindicoRepository.save(sindico);
+
+    }
+
+
+    public Propriedade getById(String id) {
+        return repository.findById(id).get();
     }
 
     public List<Propriedade> getAllByNome(String nome) {

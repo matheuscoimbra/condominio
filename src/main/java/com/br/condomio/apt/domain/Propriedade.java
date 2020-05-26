@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
@@ -29,7 +30,7 @@ public class Propriedade implements Serializable {
     @NotEmpty(message = "Informe o nome do condomínio")
     private String nome;
 
-    private Sindico sindico;
+    private SindicoProp sindico;
 
     @NotEmpty(message = "Informe o nome do propietário")
     private String propietario;
@@ -38,7 +39,7 @@ public class Propriedade implements Serializable {
 
     @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;
-
+    @DBRef
     private List<Bloco> blocos;
 
     @NotNull(message = "Informe a quantidade de BLOCO/PREDIO")

@@ -1,5 +1,7 @@
 package com.br.condomio.apt.domain;
 
+
+import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,22 +10,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-@Document(collection = "inquilino")
-public class Inquilino {
+@Document(collection = "aprovacao")
+public class Aprovacao {
 
     @Id
     private String id;
-    private String telefone;
-    private String nome;
-    private String token;
-    private List<InquilinoSituacao> inquilinoSituacaos = new ArrayList<>();
 
+    private String inquilinoNome;
+    private String telefone;
+    private String inquilinoId;
+    private StatusInquilino statusInquilino;
+    private ObjetivoInquilino objetivoInquilino;
 
 }

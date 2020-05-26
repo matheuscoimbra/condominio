@@ -1,12 +1,14 @@
 package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.Inquilino;
+import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.repository.InquilinoRepository;
 import com.br.condomio.apt.service.exception.InvalidPhoneNumberException;
 import com.br.condomio.apt.service.exception.ObjectNotFoundException;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,15 @@ public class InquilinoService {
     @Autowired
     private InquilinoRepository repository;
 
-    public Inquilino save(Inquilino inquilino){
+    @Autowired
+    private ModelMapper mapper;
+
+    public Inquilino save(InquilinoDTO inquilino){
+
+        Inquilino inquilino1 = mapper.map(inquilino,Inquilino.class);
         String newCell = nationalNumber(inquilino.getTelefone());
-        inquilino.setTelefone(newCell);
-        return repository.save(inquilino);
+        inquilino1.setTelefone(newCell);
+        return repository.save(inquilino1);
     }
 
     public Inquilino find(String telefone){
@@ -40,5 +47,9 @@ public class InquilinoService {
         }catch (NumberParseException e){
             throw new InvalidPhoneNumberException("Número de telefone incorreto");
         }
+    }
+
+    public Inquilino findById(String id) {
+        return repository.findById(id).get();
     }
 }

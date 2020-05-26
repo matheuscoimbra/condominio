@@ -40,6 +40,9 @@ public class AdminService implements UserDetailsService {
     @Autowired
     private PasswordEncoder encoder;
 
+    public Admin findByCPF(String cpf){
+        return repository.findAdminByCpf(cpf).get();
+    }
 
     public Admin save(Admin admin){
         return repository.save(admin);

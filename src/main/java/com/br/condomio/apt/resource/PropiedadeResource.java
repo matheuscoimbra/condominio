@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -29,6 +30,18 @@ public class PropiedadeResource {
     public ResponseEntity<Propriedade> blocos(@RequestBody @Valid BlocoDTO condominio){
 
         return ResponseEntity.ok(service.save(condominio));
+    }
+
+    @PostMapping("sindico")
+    public ResponseEntity<?> saveSindico(@RequestParam("sindico_id") String sindico, @RequestParam("propriedade_id") String propriedade){
+        service.saveSindicoPropriedade(sindico,propriedade);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/id")
+    public ResponseEntity<Propriedade> buscaPorId(@PathVariable("id") String id){
+
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping("/propietario")

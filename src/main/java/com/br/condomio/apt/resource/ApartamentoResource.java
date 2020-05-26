@@ -1,6 +1,8 @@
 package com.br.condomio.apt.resource;
 
 
+import com.br.condomio.apt.domain.Apartamento;
+import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;
@@ -30,32 +32,38 @@ public class ApartamentoResource {
         return ResponseEntity.ok(service.changeBetWeen(changeBetweenDTO));
     }
 
-    @PatchMapping("change/{id}")
+    @GetMapping(value = "/id")
+    public ResponseEntity<Apartamento> buscaPorId(@PathVariable("id") String id){
+
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PatchMapping(value = "change/{id}")
     public ResponseEntity<?> changeName(@PathVariable("id") String id, @RequestParam("name") String name){
         service.changeName(id,name);
 
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}/inquilino")
+    @DeleteMapping(value = "{id}/inquilino")
     public ResponseEntity<?> deleteInquilino(@PathVariable("id") String id){
         service.removeInquilino(id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<?> delete(@PathVariable("id") String id){
         service.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{id}/notify")
+    @PostMapping(value = "{id}/notify")
     public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody NotificacaoDTO notificacaoDTO){
         service.notifyInquilino(id,notificacaoDTO);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{id}/inquilino")
+    @PostMapping(value = "{id}/inquilino")
     public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody InquilinoDTO inquilinoDTO){
         service.saveInquilino(id,inquilinoDTO);
         return ResponseEntity.ok().build();

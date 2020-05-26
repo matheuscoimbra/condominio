@@ -1,6 +1,8 @@
 package com.br.condomio.apt.resource;
 
+import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Inquilino;
+import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.service.InquilinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,14 @@ public class InquilinoResource {
     private InquilinoService service;
 
     @PostMapping
-    public ResponseEntity<Inquilino> save(@RequestBody Inquilino inquilino){
+    public ResponseEntity<Inquilino> save(@RequestBody InquilinoDTO inquilino){
         return ResponseEntity.created(null).body(service.save(inquilino));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Inquilino> buscaPorId(@PathVariable("id") String id){
+
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @GetMapping("verifica")

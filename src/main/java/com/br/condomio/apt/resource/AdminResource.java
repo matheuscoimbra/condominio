@@ -46,7 +46,7 @@ public class AdminResource {
             usuario.cpf = credenciais.getCpf();
             UserDetails usuarioAutenticado = service.autenticar(usuario);
             String token = jwtService.gerarToken(usuario);
-            return new TokenDTO(usuario.getCpf(), token);
+            return new TokenDTO(service.findByCPF(credenciais.getCpf()), token);
         } catch (UsernameNotFoundException | SenhaInvalidaException e ){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

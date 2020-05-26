@@ -37,6 +37,10 @@ public class SindicoService {
 
     }
 
+    public Sindico getById(String id){
+        return repository.findById(id).get();
+    }
+
 
     public UserDetails autenticar(CredenciaisDTO usuario ){
         UserDetails user = loadUserByTelefone(usuario.getTelefone());
