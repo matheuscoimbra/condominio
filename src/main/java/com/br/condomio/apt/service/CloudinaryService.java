@@ -26,6 +26,7 @@ public class CloudinaryService {
             MultipartFile file = base64ToMultipart(base64);
             File uploadedFile = convertMultiPartToFile(file);
             Map uploadResult = cloudinaryConfig.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+            uploadedFile.delete();
             return uploadResult.get("url").toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
