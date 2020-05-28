@@ -35,7 +35,7 @@ public class Propriedade implements Serializable {
     @NotEmpty(message = "Informe o nome do propietário")
     private String propietario;
 
-    private Porteiro porteiro;
+    private PorteiroProp porteiro;
 
     @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;

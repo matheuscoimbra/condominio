@@ -38,6 +38,21 @@ public class JwtService {
                 .compact();
     }
 
+    public String gerarTokenPorteiro(Usuario usuario ){
+        long expString = Long.valueOf(expiracao);
+        LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
+        Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
+        Date data = Date.from(instant);
+
+        return Jwts
+                .builder()
+                .setId("porteiro")
+                .setSubject(usuario.getCpf())
+                .setExpiration(data)
+                .signWith( SignatureAlgorithm.HS512, chaveAssinatura )
+                .compact();
+    }
+
     public String gerarTokenSindico(Usuario usuario ){
         long expString = Long.valueOf(expiracao);
         LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);

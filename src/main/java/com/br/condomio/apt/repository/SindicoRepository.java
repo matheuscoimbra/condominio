@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface SindicoRepository extends MongoRepository<Sindico, String> {
 
-    Optional<Sindico> findSindicosByTelefone(String telefone);
-    Optional<Sindico> findSindicosByCpf(String cpf);
+    Optional<Sindico> findSindicoByTelefone(String telefone);
+    Optional<Sindico> findSindicoByCpf(String cpf);
 }

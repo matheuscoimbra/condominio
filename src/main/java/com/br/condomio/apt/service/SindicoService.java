@@ -54,17 +54,17 @@ public class SindicoService {
     }
 
     public Sindico findByTelefone(String telefone){
-        return repository.findSindicosByTelefone(telefone)
+        return repository.findSindicoByTelefone(telefone)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
     }
 
     public Sindico findByCpf(String cpf){
-        return repository.findSindicosByCpf(cpf)
+        return repository.findSindicoByCpf(cpf)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
     }
 
     public UserDetails loadUserByCpf(String cpf) {
-        Sindico usuario = repository.findSindicosByCpf(cpf)
+        Sindico usuario = repository.findSindicoByCpf(cpf)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
 
         String[] roles = usuario.isSindico() ?
@@ -79,7 +79,7 @@ public class SindicoService {
     }
 
     public UserDetails loadUserByTelefone(String telefone) throws UsernameNotFoundException {
-        Sindico usuario = repository.findSindicosByTelefone(telefone)
+        Sindico usuario = repository.findSindicoByTelefone(telefone)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
 
         String[] roles = usuario.isSindico() ?

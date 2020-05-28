@@ -18,10 +18,9 @@ import java.util.Map;
 @Builder
 @Data
 public class PorteiroDTO {
-
+    private String cpf;
     private String telefone;
     private String nome;
-    private String condominioId;
     Map<TurnoPorteiro, List<Date>> turno;
 
 }
