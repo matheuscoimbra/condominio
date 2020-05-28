@@ -38,6 +38,12 @@ public class PropiedadeResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("porteiro")
+    public ResponseEntity<?> savePorteiro(@RequestParam("porteiro_id") String porteiro, @RequestParam("propriedade_id") String propriedade){
+        service.savePorteiroPropriedade(porteiro,propriedade);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<Propriedade> buscaPorId(@PathVariable("id") String id){
 

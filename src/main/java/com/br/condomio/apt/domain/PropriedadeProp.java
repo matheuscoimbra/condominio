@@ -1,9 +1,9 @@
-package com.br.condomio.apt.domain.enums;
+package com.br.condomio.apt.domain;
 
 import lombok.Data;
 
 @Data
-public class PropriedadeSindico {
+public class PropriedadeProp {
 
     private String id;
     private String nome;

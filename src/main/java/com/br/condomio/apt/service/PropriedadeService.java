@@ -2,9 +2,8 @@ package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.*;
 import com.br.condomio.apt.domain.enums.Arquitetura;
-import com.br.condomio.apt.domain.enums.PropriedadeSindico;
+import com.br.condomio.apt.domain.PropriedadeProp;
 import com.br.condomio.apt.dto.BlocoDTO;
-import com.br.condomio.apt.dto.CondominioDTO;
 import com.br.condomio.apt.dto.PredioDTO;
 import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.*;
@@ -27,6 +26,9 @@ public class PropriedadeService {
 
     @Autowired
     private PropriedadeRepository repository;
+
+    @Autowired
+    private PorteiroRepository porteiroRepository;
 
     @Autowired
     private SindicoRepository sindicoRepository;
@@ -170,6 +172,32 @@ public class PropriedadeService {
        return repository.findAllByPropietario(cnpj);
     }
 
+
+    public void savePorteiroPropriedade(String idPorteiro, String idPropriedade){
+
+        var propriedade = getById(idPropriedade);
+
+        var porteiro = porteiroRepository.findById(idPorteiro).get();
+
+        PorteiroProp porteiroProp = new PorteiroProp();
+        porteiroProp.setId(porteiro.getId());
+        porteiroProp.setNome(porteiro.getNome());
+        porteiroProp.setTelefone(porteiro.getTelefone());
+
+
+        PropriedadeProp propriedadeProp = new PropriedadeProp();
+        propriedadeProp.setCnpj(propriedade.getCnpj());
+        propriedadeProp.setNome(propriedade.getNome());
+        propriedadeProp.setId(propriedade.getId());
+
+        propriedade.setPorteiro(porteiroProp);
+        porteiro.getPropriedadePorteiro().add(propriedadeProp);
+
+        repository.save(propriedade);
+        porteiroRepository.save(porteiro);
+
+    }
+
     public void saveSindicoPropriedade(String idSindico, String idPropriedade){
 
         var propriedade = getById(idPropriedade);
@@ -180,13 +208,13 @@ public class PropriedadeService {
         sindicoProp.setId(sindico.getId());
         sindicoProp.setNome(sindico.getNome());
 
-        PropriedadeSindico propriedadeSindico = new PropriedadeSindico();
-        propriedadeSindico.setCnpj(propriedade.getCnpj());
-        propriedadeSindico.setNome(propriedade.getNome());
-        propriedadeSindico.setId(propriedade.getId());
+        PropriedadeProp propriedadeProp = new PropriedadeProp();
+        propriedadeProp.setCnpj(propriedade.getCnpj());
+        propriedadeProp.setNome(propriedade.getNome());
+        propriedadeProp.setId(propriedade.getId());
 
         propriedade.setSindico(sindicoProp);
-        sindico.getPropriedadeSindico().add(propriedadeSindico);
+        sindico.getPropriedadeSindico().add(propriedadeProp);
 
         repository.save(propriedade);
         sindicoRepository.save(sindico);

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class Porteiro extends Usuario{
     private String id;
     private String telefone;
     private String nome;
-    private String condominioId;
+    private List<PropriedadeProp> propriedadePorteiro =  new ArrayList<>();
     Map<TurnoPorteiro, List<Date>> turno;
     private boolean porteiro = true;
 

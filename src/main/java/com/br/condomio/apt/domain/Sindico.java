@@ -1,6 +1,5 @@
 package com.br.condomio.apt.domain;
 
-import com.br.condomio.apt.domain.enums.PropriedadeSindico;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,7 @@ public class Sindico extends Usuario{
     private String foto;
     private String telefone;
     private String nome;
-    private List<PropriedadeSindico> propriedadeSindico =  new ArrayList<>();
+    private List<PropriedadeProp> propriedadeSindico =  new ArrayList<>();
     private List<Aprovacao> aprovacaos =  new ArrayList<>();
     private boolean sindico = true;
 
