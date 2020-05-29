@@ -1,7 +1,7 @@
 package com.br.condomio.apt.domain.enums;
 
 public enum StatusInquilino {
-    ANALISE(1, "ANALISE"), APROVADO(2, "APROVADO");
+    ANALISE(1, "ANALISE"), APROVADO(2, "APROVADO"),  RECUSADO(3, "RECUSADO");
 
     private int cod;
     private String description;

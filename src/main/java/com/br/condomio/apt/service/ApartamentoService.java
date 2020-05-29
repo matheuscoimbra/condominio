@@ -73,6 +73,8 @@ public class ApartamentoService {
 
                     Aprovacao aprovacao = Aprovacao.builder().
                             inquilinoId(inquilino.getId())
+                            .apartamentoId(apartamento.getId())
+                            .propriedadeId(condominio.get().getId())
                             .inquilinoNome(inquilino.getNome())
                             .telefone(inquilino.getTelefone())
                             .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
@@ -90,12 +92,7 @@ public class ApartamentoService {
                     inquilino.getInquilinoSituacaos().add(situacao);
 
                     inquilinoRepository.save(inquilino);
-                    inquilinoDTO.setStatusInquilino(StatusInquilino.ANALISE);
-                    inquilinoDTO.setNome(inquilino.getNome());
-                    inquilinoDTO.setTelefone(inquilino.getTelefone());
-                    apartamento.setInquilino(inquilinoDTO);
-                    apartamento.setNotificacaos(new ArrayList<>());
-                    repository.save(apartamento);
+
                 },
 
                 ()->{throw new RuntimeException();});

@@ -1,6 +1,7 @@
 package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.Admin;
+import com.br.condomio.apt.domain.Aprovacao;
 import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.dto.CredenciaisDTO;
 import com.br.condomio.apt.dto.SindicoDTO;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SindicoService {
@@ -93,4 +96,8 @@ public class SindicoService {
                 .build();
     }
 
+    public List<Aprovacao> buscaAprovacoesPorId(String id) {
+
+        return repository.findById(id).get().getAprovacaos();
+    }
 }

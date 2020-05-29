@@ -1,6 +1,7 @@
 package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Admin;
+import com.br.condomio.apt.domain.Aprovacao;
 import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.dto.CredenciaisDTO;
@@ -19,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("sindico")
@@ -46,6 +49,15 @@ public class SindicoResource {
 
         return ResponseEntity.ok(service.getById(id));
     }
+
+    @GetMapping(value = "/{id}/aprovacao")
+    public ResponseEntity<List<Aprovacao>> buscaAprovacoesPorId(@PathVariable("id") String id){
+
+        return ResponseEntity.ok(service.buscaAprovacoesPorId(id));
+    }
+
+
+
 
     @PostMapping("/login")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){

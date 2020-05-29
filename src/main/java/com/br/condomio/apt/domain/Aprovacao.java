@@ -23,6 +23,8 @@ public class Aprovacao {
     private String inquilinoNome;
     private String telefone;
     private String inquilinoId;
+    private String apartamentoId;
+    private String propriedadeId;
     private StatusInquilino statusInquilino;
     private ObjetivoInquilino objetivoInquilino;
 

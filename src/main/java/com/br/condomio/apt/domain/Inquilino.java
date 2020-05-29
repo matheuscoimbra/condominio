@@ -23,6 +23,7 @@ public class Inquilino {
     private String telefone;
     private String nome;
     private String token;
+    private List<ApartamentoProp> propriedades = new ArrayList<>();
     private List<InquilinoSituacao> inquilinoSituacaos = new ArrayList<>();
 
 
