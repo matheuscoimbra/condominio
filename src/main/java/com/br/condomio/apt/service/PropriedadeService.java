@@ -191,6 +191,8 @@ public class PropriedadeService {
         propriedadeProp.setId(propriedade.getId());
 
         propriedade.setPorteiro(porteiroProp);
+        propriedade.setComPorteiro(true);
+
         porteiro.getPropriedadePorteiro().add(propriedadeProp);
 
         repository.save(propriedade);
@@ -214,6 +216,7 @@ public class PropriedadeService {
         propriedadeProp.setId(propriedade.getId());
 
         propriedade.setSindico(sindicoProp);
+        propriedade.setComSindico(true);
         sindico.getPropriedadeSindico().add(propriedadeProp);
 
         repository.save(propriedade);
@@ -231,5 +234,15 @@ public class PropriedadeService {
         Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
         return repository.findAll(example);
+    }
+
+    public List<Propriedade> getNomeSindicoNotNull(String nome) {
+        Propriedade propriedade = Propriedade.builder().nome(nome).comSindico(true).build();
+        Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.
+                matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase());
+        return repository.findAll(example);
+
     }
 }

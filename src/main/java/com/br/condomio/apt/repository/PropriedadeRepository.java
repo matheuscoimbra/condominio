@@ -11,4 +11,7 @@ public interface PropriedadeRepository extends MongoRepository<Propriedade, Stri
     List<Propriedade> findAllByPropietario(String propietario);
 
     Optional<Propriedade> findPropriedadeByCnpj(String cnpj);
+
+    List<Propriedade> findAllByNomeContainingAndSindicoNotNull(String nome);
+
 }

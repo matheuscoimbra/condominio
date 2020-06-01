@@ -57,9 +57,15 @@ public class PropiedadeResource {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<Propriedade>> getAllByName(@RequestParam("nome") String cnpj){
+    public ResponseEntity<List<Propriedade>> getAllByName(@RequestParam(value = "nome", required = false) String nome){
 
-        return ResponseEntity.ok(service.getAllByNome(cnpj));
+        return ResponseEntity.ok(service.getAllByNome(nome));
+    }
+
+    @GetMapping("/inquilino/todos")
+    public ResponseEntity<List<Propriedade>> getAllByNameSindico(@RequestParam(value = "nome", required = false) String nome){
+
+        return ResponseEntity.ok(service.getNomeSindicoNotNull(nome));
     }
 
     @PatchMapping("change/{id}")

@@ -2,13 +2,19 @@ package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.Admin;
 import com.br.condomio.apt.domain.Aprovacao;
+import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.dto.CredenciaisDTO;
 import com.br.condomio.apt.dto.SindicoDTO;
+import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.SindicoRepository;
 import com.br.condomio.apt.service.exception.SenhaInvalidaException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,9 +37,19 @@ public class SindicoService {
     @Autowired
     private CloudinaryService service;
 
-    public SindicoDTO save(Sindico s){
 
-        s.setFoto(service.uploadFile(s.getFoto()));
+    @SneakyThrows
+    public SindicoDTO save(Sindico s){
+        ObjectMapper objectMapper = new ObjectMapper();
+        var str  = objectMapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        var obj = objectMapper.readValue(str, UserSS.class);
+        boolean admin = obj.getAuthorities().stream().filter((k)->k.containsValue("ROLE_ADMIN")).findAny().isPresent();
+        if(!admin){
+            throw new RuntimeException("nao autorizado. apenas admin");
+        }
+        if(StringUtils.isNotEmpty(s.getFoto())) {
+            s.setFoto(service.uploadFile(s.getFoto()));
+        }
         var sindico =  mapper.map(repository.save(s), SindicoDTO.class);
         sindico.setCpf(s.cpf);
         return sindico;
