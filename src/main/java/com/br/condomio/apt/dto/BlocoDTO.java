@@ -32,4 +32,16 @@ public class BlocoDTO implements Serializable {
     private String start;
 
     private String intervalo;
+
+    private String bairro;
+
+    private String cidade;
+
+    private String uf;
+
+    private String cep;
+
+    private String numero;
+
+    private String complemento;
 }

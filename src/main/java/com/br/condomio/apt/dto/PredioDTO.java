@@ -34,6 +34,17 @@ public class PredioDTO implements Serializable {
 
     private String intervalo;
 
+    private String bairro;
+
+    private String cidade;
+
+    private String uf;
+
+    private String cep;
+
+    private String numero;
+
+    private String complemento;
 
 
 }
