@@ -1,5 +1,6 @@
 package com.br.condomio.apt.domain;
 
+import com.br.condomio.apt.domain.enums.PerfilInquilino;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class Inquilino {
     private String telefone;
     private String nome;
     private String token;
+    private PerfilInquilino perfil;
     private List<ApartamentoProp> propriedades = new ArrayList<>();
     private List<InquilinoSituacao> inquilinoSituacaos = new ArrayList<>();
 
