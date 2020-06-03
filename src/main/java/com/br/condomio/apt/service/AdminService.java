@@ -9,6 +9,7 @@ import com.br.condomio.apt.dto.NotificacaoDTO;
 import com.br.condomio.apt.repository.AdminRepository;
 import com.br.condomio.apt.repository.ApartamentoRepository;
 import com.br.condomio.apt.repository.BlocoRepository;
+import com.br.condomio.apt.repository.VerificationRepository;
 import com.br.condomio.apt.service.exception.SenhaInvalidaException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,9 @@ public class AdminService implements UserDetailsService {
     
     @Autowired
     private BlocoRepository blocoRepository;
+
+    @Autowired
+    private VerificationRepository verificationRepository;
 
     @Autowired
     private ApartamentoRepository apartamentoRepository;
@@ -41,7 +46,12 @@ public class AdminService implements UserDetailsService {
     private PasswordEncoder encoder;
 
     public Admin findByCPF(String cpf){
-        return repository.findAdminByCpf(cpf).get();
+         var result  = repository.findAdminByCpf(cpf);
+         if(result.isPresent()){
+             return result.get();
+         }else{
+             return null;
+         }
     }
 
     public Admin save(Admin admin){
@@ -74,4 +84,21 @@ public class AdminService implements UserDetailsService {
                 .roles(roles)
                 .build();
     }
+    boolean emailExist(String email) {
+        return repository.findAdminByEmail(email).isPresent();
+    }
+
+
+    public void enableRegisteredUser(Admin user) {
+        repository.save(user);
+    }
+
+    public void createVerificationToken(Admin user, String token) {
+        VerificationToken newUserToken = new VerificationToken(token, user);
+        verificationRepository.save(newUserToken);
+    }
+    public Optional<VerificationToken> getVerificationToken(String verificationToken) {
+        return verificationRepository.findFirstByTokenEquals(verificationToken);
+    }
+
 }

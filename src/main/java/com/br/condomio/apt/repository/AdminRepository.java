@@ -10,4 +10,6 @@ public interface AdminRepository extends MongoRepository<Admin, String> {
 
     Optional<Admin> findAdminByCpfAndAndSenha(String cnpj, String senha);
     Optional<Admin> findAdminByCpf(String cnpj);
+
+    Optional<Admin> findAdminByEmail(String email);
 }

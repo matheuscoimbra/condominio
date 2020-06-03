@@ -11,16 +11,20 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @Document(collection = "admin")
 public class Admin extends Usuario{
 
+    public Admin() {
+        super();
+        this.enabled=false;
+    }
+
     @Id
     private String id;
-
+    private boolean enabled;
     @NotEmpty( message = "Informe o nome")
     private String nome;
     @NotEmpty( message = "Informe o email")

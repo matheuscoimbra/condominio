@@ -6,6 +6,34 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URI:mongodb+srv://admin:dUEIUUtDLCAojL4a@cemprestimo-uf93j.mongodb.net/test?retryWrites=true&w=majority}
+  thymeleaf:
+    encoding: UTF-8
+    excluded-view-names: '# comma-separated list of view names   that should be
+             excluded from resolution'
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+
+  mail:
+    default-encoding: UTF-8
+    host: smtp.mailgun.org
+    username: postmaster@sandbox158f79210eb0442081940e846137acd4.mailgun.org
+    password: 7c342fd255d62ba8e0b2d1b5f1405d8c-a2b91229-b4f5afb9
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+      protocol: smtp
+      test-connection: false
+
+sendgrid:
+  api:
+    key = ABCcvbdTYDRS_ksjdhIUYICS.-836jksjsdhYTkPt12hdgsT-whdk
 
 java:
   runtime:

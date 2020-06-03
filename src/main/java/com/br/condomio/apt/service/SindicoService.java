@@ -1,8 +1,6 @@
 package com.br.condomio.apt.service;
 
-import com.br.condomio.apt.domain.Admin;
 import com.br.condomio.apt.domain.Aprovacao;
-import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.domain.Sindico;
 import com.br.condomio.apt.dto.CredenciaisDTO;
 import com.br.condomio.apt.dto.SindicoDTO;
@@ -10,6 +8,13 @@ import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.SindicoRepository;
 import com.br.condomio.apt.service.exception.SenhaInvalidaException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -21,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -116,4 +122,6 @@ public class SindicoService {
 
         return repository.findById(id).get().getAprovacaos();
     }
+
+
 }
