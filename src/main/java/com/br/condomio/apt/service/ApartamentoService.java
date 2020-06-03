@@ -8,6 +8,7 @@ import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.*;
+import com.br.condomio.apt.service.exception.BusinessServiceException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -177,6 +178,9 @@ public class ApartamentoService {
 
                 apartamento -> {
                     var condominio = propriedadeRepository.findPropriedadeByCnpj(apartamento.getCondomioCnpj());
+                    if(apartamento.getInquilino().getId()==null){
+                        throw new BusinessServiceException("Apartamento não possui morado");
+                    }
                     var inquilino = inquilinoRepository.findById(apartamento.getInquilino().getId()).get();
                     var bloco = blocoRepository.findBlocoByBuscadorBloco(apartamento.getBuscadorBloco());
                     var convidado = convidadoRepository.findById(convidadoDTO.getId()).get();
