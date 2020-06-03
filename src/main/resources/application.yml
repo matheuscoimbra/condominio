@@ -19,8 +19,8 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtp.mailgun.org
-    username: postmaster@sandbox158f79210eb0442081940e846137acd4.mailgun.org
-    password: 7c342fd255d62ba8e0b2d1b5f1405d8c-a2b91229-b4f5afb9
+    username: ${USER_NAME}
+    password: ${PASS_WORD}
     port: 587
     properties:
       mail:
@@ -30,10 +30,6 @@ spring:
             enable: true
       protocol: smtp
       test-connection: false
-
-sendgrid:
-  api:
-    key = ABCcvbdTYDRS_ksjdhIUYICS.-836jksjsdhYTkPt12hdgsT-whdk
 
 java:
   runtime:
