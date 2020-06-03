@@ -3,10 +3,7 @@ package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Propriedade;
-import com.br.condomio.apt.dto.ApartamentoDTO;
-import com.br.condomio.apt.dto.ChangeBetweenDTO;
-import com.br.condomio.apt.dto.InquilinoDTO;
-import com.br.condomio.apt.dto.NotificacaoDTO;
+import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.service.ApartamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +48,8 @@ public class ApartamentoResource {
         return ResponseEntity.ok().build();
     }
 
+
+
     @DeleteMapping(value = "{id}")
     public ResponseEntity<?> delete(@PathVariable("id") String id){
         service.delete(id);
@@ -66,6 +65,12 @@ public class ApartamentoResource {
     @PostMapping(value = "{id}/inquilino")
     public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody InquilinoDTO inquilinoDTO){
         service.saveInquilino(id,inquilinoDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "{id}/inquilino")
+    public ResponseEntity<?> addConvidado(@PathVariable("id")String id,@RequestBody ConvidadoDTO convidadoDTO){
+        service.addConvidado(id,convidadoDTO);
         return ResponseEntity.ok().build();
     }
 

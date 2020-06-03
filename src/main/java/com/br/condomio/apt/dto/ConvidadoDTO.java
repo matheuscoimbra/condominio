@@ -8,10 +8,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class InquilinoDTO implements Serializable {
+public class ConvidadoDTO implements Serializable {
 
     private String id;
     private String telefone;
     private String nome;
-    private StatusInquilino statusInquilino;
+
 }

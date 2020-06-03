@@ -4,11 +4,9 @@ import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Aprovacao;
 import com.br.condomio.apt.domain.InquilinoSituacao;
 import com.br.condomio.apt.domain.Notificacao;
+import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
 import com.br.condomio.apt.domain.enums.StatusInquilino;
-import com.br.condomio.apt.dto.ApartamentoDTO;
-import com.br.condomio.apt.dto.ChangeBetweenDTO;
-import com.br.condomio.apt.dto.InquilinoDTO;
-import com.br.condomio.apt.dto.NotificacaoDTO;
+import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +42,10 @@ public class ApartamentoService {
     private InquilinoRepository inquilinoRepository;
 
     @Autowired
+    private ConvidadoRepository convidadoRepository;
+
+
+    @Autowired
     private ModelMapper mapper;
 
     public Apartamento findById(String id){
@@ -64,7 +66,7 @@ public class ApartamentoService {
                     InquilinoSituacao situacao = InquilinoSituacao.builder().
                             apartamentoId(id)
                             .apartamentoNome(apartamento.getNome())
-                            .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
+                            .objetivoInquilino(ObjetivoInquilino.MORADOR)
                             .statusInquilino(StatusInquilino.ANALISE)
                             .blocoId(bloco.get().getId())
                             .condominio(condominio.get().getNome())
@@ -77,7 +79,7 @@ public class ApartamentoService {
                             .propriedadeId(condominio.get().getId())
                             .inquilinoNome(inquilino.getNome())
                             .telefone(inquilino.getTelefone())
-                            .objetivoInquilino(inquilinoDTO.getObjetivoInquilino())
+                            .objetivoInquilino(ObjetivoInquilino.MORADOR)
                             .statusInquilino(StatusInquilino.ANALISE).
                             build();
                     var apr = aprovacaoRepository.save(aprovacao);
@@ -167,6 +169,49 @@ public class ApartamentoService {
         repository.saveAll(List.of(aptTo,aptFrom));
 
         return blocoRepository.findById(changeBetweenDTO.getBlocoId()).get().getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+
+    }
+
+    public void addConvidado(String id, ConvidadoDTO convidadoDTO) {
+        repository.findById(id).ifPresentOrElse(
+
+                apartamento -> {
+                    var condominio = propriedadeRepository.findPropriedadeByCnpj(apartamento.getCondomioCnpj());
+                    var inquilino = inquilinoRepository.findById(apartamento.getInquilino().getId()).get();
+                    var bloco = blocoRepository.findBlocoByBuscadorBloco(apartamento.getBuscadorBloco());
+                    var convidado = convidadoRepository.findById(convidadoDTO.getId()).get();
+                    InquilinoSituacao situacao = InquilinoSituacao.builder().
+                            apartamentoId(id)
+                            .apartamentoNome(apartamento.getNome())
+                            .objetivoInquilino(ObjetivoInquilino.VISITANTE)
+                            .statusInquilino(StatusInquilino.ANALISE)
+                            .blocoId(bloco.get().getId())
+                            .condominio(condominio.get().getNome())
+                            .condominioId(condominio.get().getId())
+                            .build();
+
+                    Aprovacao aprovacao = Aprovacao.builder().
+                            inquilinoId(convidado.getId())
+                            .apartamentoId(apartamento.getId())
+                            .propriedadeId(condominio.get().getId())
+                            .inquilinoNome(convidado.getNome())
+                            .telefone(convidado.getTelefone())
+                            .objetivoInquilino(ObjetivoInquilino.VISITANTE)
+                            .statusInquilino(StatusInquilino.ANALISE).
+                                    build();
+                    var apr = aprovacaoRepository.save(aprovacao);
+
+                    inquilino.getAprovacaos().add(apr);
+
+                    inquilinoRepository.save(inquilino);
+
+                    convidado.getConvidadoSituacaos().add(situacao);
+
+                    convidadoRepository.save(convidado);
+
+                },
+
+                ()->{throw new RuntimeException();});
 
     }
 }
