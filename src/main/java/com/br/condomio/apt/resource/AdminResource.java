@@ -98,10 +98,10 @@ public class AdminResource {
         try{
 
             var user = service.findByCPF(credenciais.getCpf());
-            if(!user.isEnabled()){
+            /*if(!user.isEnabled()){
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário desabilitado");
             }
-
+*/
             Admin usuario = Admin.builder()
                     .senha(credenciais.getSenha()).build();
             usuario.cpf = credenciais.getCpf();
