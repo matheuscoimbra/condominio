@@ -68,7 +68,7 @@ public class ApartamentoResource {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "{id}/inquilino")
+    @PostMapping(value = "{id}/convidado")
     public ResponseEntity<?> addConvidado(@PathVariable("id")String id,@RequestBody ConvidadoDTO convidadoDTO){
         service.addConvidado(id,convidadoDTO);
         return ResponseEntity.ok().build();

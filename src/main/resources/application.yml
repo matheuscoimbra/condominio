@@ -15,7 +15,8 @@ spring:
     suffix: .html
     servlet:
       content-type: text/html
-
+  sendgrid:
+    api-key: ${SEND_GRID}
   mail:
     default-encoding: UTF-8
     host: ${HOST}
@@ -36,7 +37,7 @@ java:
     version: 11
 
 server:
-  port: ${SERVER_PORT:8081}
+  port: ${SERVER_PORT:8083}
 
 cloudinary:
   api_key: 196455977573897
