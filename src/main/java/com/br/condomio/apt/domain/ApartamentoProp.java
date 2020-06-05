@@ -17,4 +17,5 @@ public class ApartamentoProp {
     private String apartamentoNome;
     private String propriedadeNome;
     private String propriedadeCnpj;
+    private String inquilinoId;
 }

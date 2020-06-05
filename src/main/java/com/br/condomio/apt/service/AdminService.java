@@ -1,7 +1,6 @@
 package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.*;
-import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ChangeBetweenDTO;
 import com.br.condomio.apt.dto.InquilinoDTO;

@@ -1,12 +1,9 @@
 package com.br.condomio.apt.service;
 
 import com.br.condomio.apt.domain.*;
-import com.br.condomio.apt.domain.enums.StatusInquilino;
+import com.br.condomio.apt.domain.enums.StatusPessoa;
 import com.br.condomio.apt.dto.InquilinoDTO;
-import com.br.condomio.apt.repository.ApartamentoRepository;
-import com.br.condomio.apt.repository.AprovacaoRepository;
-import com.br.condomio.apt.repository.InquilinoRepository;
-import com.br.condomio.apt.repository.PropriedadeRepository;
+import com.br.condomio.apt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,9 @@ public class AprovacaoService {
     private InquilinoRepository inquilinoRepository;
 
     @Autowired
+    private ConvidadoRepository convidadoRepository;
+
+    @Autowired
     private AprovacaoRepository repository;
 
     @Autowired
@@ -31,18 +31,18 @@ public class AprovacaoService {
     private PropriedadeRepository propriedadeRepository;
 
 
-    public void mudaStatus(String aprovacaoId, StatusInquilino status) {
+    public void mudaStatus(String aprovacaoId, StatusPessoa status) {
 
         Aprovacao aprovacao = repository.findById(aprovacaoId).get();
         Inquilino inquilino = inquilinoRepository.findById(aprovacao.getInquilinoId()).get();
 
-        if(status.equals(StatusInquilino.APROVADO)){
+        if(status.equals(StatusPessoa.APROVADO)){
 
             Propriedade propriedade = propriedadeRepository.findById(aprovacao.getPropriedadeId()).get();
 
             Apartamento apartamento = apartamentoRepository.findById(aprovacao.getApartamentoId()).get();
             InquilinoDTO inquilinoDTO = new InquilinoDTO();
-            inquilinoDTO.setStatusInquilino(StatusInquilino.APROVADO);
+            inquilinoDTO.setStatusPessoa(StatusPessoa.APROVADO);
             inquilinoDTO.setNome(inquilino.getNome());
             inquilinoDTO.setTelefone(inquilino.getTelefone());
             apartamento.setInquilino(inquilinoDTO);
@@ -65,7 +65,7 @@ public class AprovacaoService {
             repository.delete(aprovacao);
 
         }
-        if(status.equals(StatusInquilino.RECUSADO)){
+        if(status.equals(StatusPessoa.RECUSADO)){
             InquilinoSituacao inquilinoSituacao = inquilino.getInquilinoSituacaos().stream()
                     .filter(inquilinoSituacao1 -> inquilinoSituacao1.getApartamentoId().equals(aprovacao.getApartamentoId()))
                     .findAny().get();
@@ -77,5 +77,46 @@ public class AprovacaoService {
         }
 
 
+    }
+
+    public void mudaStatusConvidado(String aprovacaoId, StatusPessoa status) {
+
+        Aprovacao aprovacao = repository.findById(aprovacaoId).get();
+        Inquilino inquilino = inquilinoRepository.findById(aprovacao.getInquilinoId()).get();
+        Convidado convidado = convidadoRepository.findById(aprovacao.getConvidadoId()).get();
+        if(status.equals(StatusPessoa.APROVADO)){
+
+            Propriedade propriedade = propriedadeRepository.findById(aprovacao.getPropriedadeId()).get();
+
+            Apartamento apartamento = apartamentoRepository.findById(aprovacao.getApartamentoId()).get();
+
+            ApartamentoProp propriedadeInq = ApartamentoProp.builder()
+                    .apartamentoId(apartamento.getId())
+                    .apartamentoNome(apartamento.getNome())
+                    .propriedadeNome(propriedade.getNome())
+                    .propriedadeCnpj(propriedade.getCnpj())
+                    .inquilinoId(inquilino.getId()).build();
+
+            InquilinoSituacao inquilinoSituacao = convidado.getConvidadoSituacaos().stream()
+                    .filter(inquilinoSituacao1 -> inquilinoSituacao1.getApartamentoId().equals(aprovacao.getApartamentoId()))
+                    .findAny().get();
+            convidado.getConvidadoSituacaos().remove(inquilinoSituacao);
+            convidado.getPropriedades().add(propriedadeInq);
+            inquilino.getConvidados().add(convidado);
+            inquilinoRepository.save(inquilino);
+            convidadoRepository.save(convidado);
+            repository.delete(aprovacao);
+
+        }
+        if(status.equals(StatusPessoa.RECUSADO)){
+            InquilinoSituacao inquilinoSituacao = convidado.getConvidadoSituacaos().stream()
+                    .filter(inquilinoSituacao1 -> inquilinoSituacao1.getApartamentoId().equals(aprovacao.getApartamentoId()))
+                    .findAny().get();
+            convidado.getConvidadoSituacaos().remove(inquilinoSituacao);
+            convidadoRepository.save(convidado);
+
+            repository.delete(aprovacao);
+            //TODO algo
+        }
     }
 }

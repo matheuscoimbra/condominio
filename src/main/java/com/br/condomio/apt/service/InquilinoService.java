@@ -1,7 +1,11 @@
 package com.br.condomio.apt.service;
 
+import com.br.condomio.apt.domain.ApartamentoProp;
+import com.br.condomio.apt.domain.Convidado;
 import com.br.condomio.apt.domain.Inquilino;
+import com.br.condomio.apt.domain.InquilinoSituacao;
 import com.br.condomio.apt.dto.InquilinoDTO;
+import com.br.condomio.apt.repository.ConvidadoRepository;
 import com.br.condomio.apt.repository.InquilinoRepository;
 import com.br.condomio.apt.service.exception.InvalidPhoneNumberException;
 import com.br.condomio.apt.service.exception.ObjectNotFoundException;
@@ -12,11 +16,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InquilinoService {
 
     @Autowired
     private InquilinoRepository repository;
+
+    @Autowired
+    private ConvidadoRepository convidadoRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -51,5 +60,25 @@ public class InquilinoService {
 
     public Inquilino findById(String id) {
         return repository.findById(id).get();
+    }
+
+    public List<Convidado> getAllConvidados(String id) {
+        Inquilino inquilino = findById(id);
+        return inquilino.getConvidados();
+    }
+
+    public void deleteConvidado(String inquiniloId, String id) {
+        var convidado = convidadoRepository.findById(id).get();
+        Inquilino inquilino = findById(inquiniloId);
+        ApartamentoProp prop = convidado.getPropriedades().stream()
+                .filter(apartamentoProp -> apartamentoProp.getInquilinoId().equals(inquilino.getId()))
+                .findAny().get();
+        convidado.getPropriedades().remove(prop);
+        inquilino.getConvidados().remove(convidado);
+
+        repository.save(inquilino);
+        convidadoRepository.save(convidado);
+
+
     }
 }

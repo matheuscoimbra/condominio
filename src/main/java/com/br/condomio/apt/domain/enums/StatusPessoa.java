@@ -1,13 +1,13 @@
 package com.br.condomio.apt.domain.enums;
 
-public enum StatusInquilino {
+public enum StatusPessoa {
     ANALISE(1, "ANALISE"), APROVADO(2, "APROVADO"),  RECUSADO(3, "RECUSADO");
 
     private int cod;
     private String description;
 
 
-    StatusInquilino(int cod, String description) {
+    StatusPessoa(int cod, String description) {
         this.cod = cod;
         this.description = description;
     }
@@ -20,13 +20,13 @@ public enum StatusInquilino {
         return description;
     }
 
-    public static StatusInquilino toEnum(Integer cod) {
+    public static StatusPessoa toEnum(Integer cod) {
 
         if (cod == null) {
             return null;
         }
 
-        for (StatusInquilino x : StatusInquilino.values()) {
+        for (StatusPessoa x : StatusPessoa.values()) {
             if (cod.equals(x.getCod())) {
                 return x;
             }

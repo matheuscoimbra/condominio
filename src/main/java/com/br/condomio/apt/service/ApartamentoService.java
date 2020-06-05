@@ -5,7 +5,7 @@ import com.br.condomio.apt.domain.Aprovacao;
 import com.br.condomio.apt.domain.InquilinoSituacao;
 import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
-import com.br.condomio.apt.domain.enums.StatusInquilino;
+import com.br.condomio.apt.domain.enums.StatusPessoa;
 import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.*;
 import com.br.condomio.apt.service.exception.BusinessServiceException;
@@ -68,7 +68,7 @@ public class ApartamentoService {
                             apartamentoId(id)
                             .apartamentoNome(apartamento.getNome())
                             .objetivoInquilino(ObjetivoInquilino.MORADOR)
-                            .statusInquilino(StatusInquilino.ANALISE)
+                            .statusPessoa(StatusPessoa.ANALISE)
                             .blocoId(bloco.get().getId())
                             .condominio(condominio.get().getNome())
                             .condominioId(condominio.get().getId())
@@ -81,7 +81,7 @@ public class ApartamentoService {
                             .inquilinoNome(inquilino.getNome())
                             .telefone(inquilino.getTelefone())
                             .objetivoInquilino(ObjetivoInquilino.MORADOR)
-                            .statusInquilino(StatusInquilino.ANALISE).
+                            .statusPessoa(StatusPessoa.ANALISE).
                             build();
                     var apr = aprovacaoRepository.save(aprovacao);
 
@@ -188,20 +188,21 @@ public class ApartamentoService {
                             apartamentoId(id)
                             .apartamentoNome(apartamento.getNome())
                             .objetivoInquilino(ObjetivoInquilino.VISITANTE)
-                            .statusInquilino(StatusInquilino.ANALISE)
+                            .statusPessoa(StatusPessoa.ANALISE)
                             .blocoId(bloco.get().getId())
                             .condominio(condominio.get().getNome())
                             .condominioId(condominio.get().getId())
                             .build();
 
                     Aprovacao aprovacao = Aprovacao.builder().
-                            inquilinoId(convidado.getId())
+                            inquilinoId(inquilino.getId())
                             .apartamentoId(apartamento.getId())
                             .propriedadeId(condominio.get().getId())
-                            .inquilinoNome(convidado.getNome())
-                            .telefone(convidado.getTelefone())
+                            .inquilinoNome(inquilino.getNome())
+                            .telefone(inquilino.getTelefone())
+                            .convidadoId(convidado.getId())
                             .objetivoInquilino(ObjetivoInquilino.VISITANTE)
-                            .statusInquilino(StatusInquilino.ANALISE).
+                            .statusPessoa(StatusPessoa.ANALISE).
                                     build();
                     var apr = aprovacaoRepository.save(aprovacao);
 

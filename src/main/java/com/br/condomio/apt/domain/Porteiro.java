@@ -1,6 +1,5 @@
 package com.br.condomio.apt.domain;
 
-import com.br.condomio.apt.domain.enums.StatusInquilino;
 import com.br.condomio.apt.domain.enums.TurnoPorteiro;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

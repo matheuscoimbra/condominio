@@ -2,7 +2,7 @@ package com.br.condomio.apt.domain;
 
 
 import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
-import com.br.condomio.apt.domain.enums.StatusInquilino;
+import com.br.condomio.apt.domain.enums.StatusPessoa;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +23,10 @@ public class Aprovacao {
     private String inquilinoNome;
     private String telefone;
     private String inquilinoId;
+    private String convidadoId;
     private String apartamentoId;
     private String propriedadeId;
-    private StatusInquilino statusInquilino;
+    private StatusPessoa statusPessoa;
     private ObjetivoInquilino objetivoInquilino;
 
 }
