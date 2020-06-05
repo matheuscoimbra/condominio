@@ -75,7 +75,7 @@ public class AdminResource {
 
 
     @GetMapping("/confirmRegistration")
-    public ResponseEntity<String> confirmRegistration(WebRequest request, @RequestParam("token") String token) {
+    public String confirmRegistration(WebRequest request, @RequestParam("token") String token) {
         Optional<VerificationToken> verificationToken = service.getVerificationToken(token);
         if(verificationToken.isPresent()==false) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização");
@@ -90,7 +90,7 @@ public class AdminResource {
 
         user.setEnabled(true);
         service.enableRegisteredUser(user);
-        return null;
+        return "confirmation";
     }
 
     @PostMapping("/login")

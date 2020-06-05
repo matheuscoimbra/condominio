@@ -64,6 +64,7 @@ public class RegistrationEmailListener implements ApplicationListener<OnRegistra
         Mail mail = new Mail();
         mail.setMailTo(recipient);//replace with your desired email
         mail.setSubject(subject);
+        mail.setFrom("mathcoimbr4@gmail.com");
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("token", token);
@@ -78,6 +79,7 @@ public class RegistrationEmailListener implements ApplicationListener<OnRegistra
         helper.setTo(mail.getMailTo());
         helper.setText(html, true);
         helper.setSubject(mail.getSubject());
+        helper.setFrom("mathcoimbr4@gmail.com");
 
 
 
