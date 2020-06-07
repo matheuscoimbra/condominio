@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("inquilino")
+@RequestMapping("morador")
 public class InquilinoResource {
 
     @Autowired
@@ -40,8 +40,8 @@ public class InquilinoResource {
         return ResponseEntity.ok(service.getAllConvidados(id));
     }
 
-    @DeleteMapping("{inquiniloId}/convidado/{id}")
-    public ResponseEntity<?> deleteConvidado(@PathVariable("inquiniloId") String inquiniloId, @PathVariable("id") String id){
+    @DeleteMapping("{moradorId}/convidado/{id}")
+    public ResponseEntity<?> deleteConvidado(@PathVariable("moradorId") String inquiniloId, @PathVariable("id") String id){
         service.deleteConvidado(inquiniloId,id);
         return ResponseEntity.noContent().build();
     }

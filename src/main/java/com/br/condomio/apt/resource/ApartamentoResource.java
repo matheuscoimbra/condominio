@@ -42,7 +42,7 @@ public class ApartamentoResource {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "{id}/inquilino")
+    @DeleteMapping(value = "{id}/morador")
     public ResponseEntity<?> deleteInquilino(@PathVariable("id") String id){
         service.removeInquilino(id);
         return ResponseEntity.ok().build();
@@ -62,7 +62,7 @@ public class ApartamentoResource {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "{id}/inquilino")
+    @PostMapping(value = "{id}/morador")
     public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody InquilinoDTO inquilinoDTO){
         service.saveInquilino(id,inquilinoDTO);
         return ResponseEntity.ok().build();
