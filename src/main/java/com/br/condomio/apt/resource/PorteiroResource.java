@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,8 +34,9 @@ public class PorteiroResource {
     @Autowired
     private ModelMapper mapper;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping()
-    public ResponseEntity<PorteiroDTO> autInquilino(@RequestBody PorteiroDTO dto){
+    public ResponseEntity<PorteiroDTO> addPorteiro(@RequestBody PorteiroDTO dto){
 
         return ResponseEntity.created(null).body(service.save(dto));
     }

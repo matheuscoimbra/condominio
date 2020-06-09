@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,8 +38,9 @@ public class SindicoResource {
     @Autowired
     private ModelMapper mapper;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping()
-    public ResponseEntity<SindicoDTO> autInquilino(@RequestBody SindicoDTO dto){
+    public ResponseEntity<SindicoDTO> addSindico(@RequestBody SindicoDTO dto){
         Sindico sindico = mapper.map(dto, Sindico.class);
         sindico.cpf = dto.getCpf();
         return ResponseEntity.created(null).body(service.save(sindico));
@@ -49,7 +51,7 @@ public class SindicoResource {
 
         return ResponseEntity.ok(service.getById(id));
     }
-
+    @PreAuthorize("hasAnyRole('SINDICO')")
     @GetMapping(value = "/{id}/aprovacao")
     public ResponseEntity<List<Aprovacao>> buscaAprovacoesPorId(@PathVariable("id") String id){
 

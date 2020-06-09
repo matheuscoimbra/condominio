@@ -67,6 +67,10 @@ public class Propriedade implements Serializable {
 
     private String complemento;
 
+    private String latitude;
+
+    private String longitude;
+
     private boolean comSindico;
 
     private boolean comPorteiro;

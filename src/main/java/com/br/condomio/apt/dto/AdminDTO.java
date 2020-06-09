@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
@@ -20,7 +21,7 @@ public class AdminDTO extends Usuario {
 
     @NotEmpty( message = "Informe o nome")
     private String nome;
-    @NotEmpty( message = "Informe o cpf")
+    @CPF( message = "Informe um cpf válido")
     private String cpf;
     @NotEmpty( message = "Informe o email")
     private String email;

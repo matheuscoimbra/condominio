@@ -40,11 +40,16 @@ public class PredioDTO implements Serializable {
 
     private String uf;
 
+    @NotNull(message = "Informe o cep")
     private String cep;
 
     private String numero;
 
     private String complemento;
+
+    private String latitude;
+
+    private String longitude;
 
 
 }

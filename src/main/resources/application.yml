@@ -40,8 +40,8 @@ server:
   port: ${SERVER_PORT:8083}
 
 cloudinary:
-  api_key: 196455977573897
-  api_secret: hvC6b0mb_7jQQbsKgHyD9J9auZE
+  api_key: ${CLOUDINARY_KEY}
+  api_secret: ${CLOUDINARY_SECRET}
   cloud_name: defdl1xal
 
 security:

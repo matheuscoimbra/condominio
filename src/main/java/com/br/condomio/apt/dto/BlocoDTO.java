@@ -44,4 +44,8 @@ public class BlocoDTO implements Serializable {
     private String numero;
 
     private String complemento;
+
+    private String latitude;
+
+    private String longitude;
 }

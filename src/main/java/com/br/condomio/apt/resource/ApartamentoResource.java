@@ -7,6 +7,7 @@ import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.service.ApartamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ApartamentoResource {
 
         return ResponseEntity.ok(service.findById(id));
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping(value = "change/{id}")
     public ResponseEntity<?> changeName(@PathVariable("id") String id, @RequestParam("name") String name){
         service.changeName(id,name);
