@@ -9,6 +9,7 @@ import com.br.condomio.apt.domain.enums.StatusPessoa;
 import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.*;
 import com.br.condomio.apt.service.exception.BusinessServiceException;
+import com.br.condomio.apt.service.exception.UnprocessableEntityException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,8 +62,17 @@ public class ApartamentoService {
         repository.findById(id).ifPresentOrElse(
 
                 apartamento -> {
+                    if(apartamento.getInquilino()!=null){
+                        throw new UnprocessableEntityException("apartamento já possui inquilino");
+                    }
+
                     var condominio = propriedadeRepository.findPropriedadeByCnpj(apartamento.getCondomioCnpj());
                     var inquilino = inquilinoRepository.findById(inquilinoDTO.getId()).get();
+                    var aprov = aprovacaoRepository.findAprovacaoByApartamentoId(apartamento.getId());
+                    if(aprov.isPresent()){
+                       throw new BusinessServiceException("Já existe solicitação para apartamento");
+                    }
+
                     var bloco = blocoRepository.findBlocoByBuscadorBloco(apartamento.getBuscadorBloco());
                     InquilinoSituacao situacao = InquilinoSituacao.builder().
                             apartamentoId(id)
@@ -98,7 +108,7 @@ public class ApartamentoService {
 
                 },
 
-                ()->{throw new RuntimeException();});
+                ()->{throw new BusinessServiceException("Não foi possívelr realizar requisição");});
 
     }
 

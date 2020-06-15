@@ -10,6 +10,10 @@ import com.br.condomio.apt.jwt.JwtService;
 import com.br.condomio.apt.service.AdminService;
 import com.br.condomio.apt.service.exception.SenhaInvalidaException;
 import com.br.condomio.apt.service.exception.UserAlreadyExistException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -45,7 +49,13 @@ public class AdminResource {
     @Autowired
     private ModelMapper mapper;
 
-
+    @Operation(summary = "cadastra admin ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "email enviado"
+            ),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
     @PostMapping()
     public ResponseEntity<String> autInquilino(@RequestBody @Valid AdminDTO adm, BindingResult result, HttpServletRequest request){
 
@@ -73,7 +83,13 @@ public class AdminResource {
         return ResponseEntity.created(null).body("Verifique a caixa de entrada do seu email");
     }
 
-
+    @Operation(summary = "confirma cadastro ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "admin habilitado"
+            ),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
     @GetMapping("/confirmRegistration")
     public String confirmRegistration(WebRequest request, @RequestParam("token") String token) {
         Optional<VerificationToken> verificationToken = service.getVerificationToken(token);
@@ -93,6 +109,13 @@ public class AdminResource {
         return "confirmation";
     }
 
+    @Operation(summary = "login ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "token retornado"
+            ),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
     @PostMapping("/login")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){
         try{
