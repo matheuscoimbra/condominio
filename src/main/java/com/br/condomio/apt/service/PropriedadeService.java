@@ -231,13 +231,15 @@ public class PropriedadeService {
 
     public List<Propriedade> getAllByNome(String nome, String cidade) {
         Propriedade propriedade = Propriedade.builder().nome(nome).cidade(cidade).build();
-        Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+        Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.
+                matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
         return repository.findAll(example);
     }
 
-    public List<Propriedade> getNomeSindicoNotNull(String nome) {
-        Propriedade propriedade = Propriedade.builder().nome(nome).comSindico(true).build();
+    public List<Propriedade> getNomeSindicoNotNull(String nome,String cidade) {
+        Propriedade propriedade = Propriedade.builder().nome(nome).cidade(cidade).comSindico(true).build();
         Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.
                 matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)

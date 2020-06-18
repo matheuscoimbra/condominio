@@ -17,6 +17,9 @@ public class InquilinoDTO implements Serializable {
     private String telefone;
     @NotBlank(message = "Informe o nome")
     private String nome;
+    @NotBlank(message = "Informe o seu email")
+    private String email;
+
     private String token;
     @JsonIgnore
     private StatusPessoa statusPessoa;

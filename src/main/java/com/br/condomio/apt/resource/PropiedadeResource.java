@@ -123,9 +123,9 @@ public class PropiedadeResource {
                     content = @Content),
     })
     @GetMapping("/inquilino/todos")
-    public ResponseEntity<List<Propriedade>> getAllByNameSindico(@RequestParam(value = "nome", required = false) String nome){
+    public ResponseEntity<List<Propriedade>> getAllByNameSindico(@RequestParam(value = "nome", required = false) String nome,@RequestParam(value = "cidade", required = false) String cidade){
 
-        return ResponseEntity.ok(service.getNomeSindicoNotNull(nome));
+        return ResponseEntity.ok(service.getNomeSindicoNotNull(nome,cidade));
     }
 
     @Operation(summary = "muda nome da propriedade")

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,13 @@ import java.util.Map;
 @Builder
 @Data
 @Document(collection = "inquilino")
-public class Inquilino {
+public class Inquilino implements Serializable {
 
     @Id
     private String id;
     private String telefone;
     private String nome;
+    private String email;
     private String token;
     @DBRef
     private List<Convidado> convidados;

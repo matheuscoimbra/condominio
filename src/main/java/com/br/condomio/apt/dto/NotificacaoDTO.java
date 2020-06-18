@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class NotificacaoDTO implements Serializable {
 
     private Motivo motivo;
-    private String descrição;
+    private String descricao;
     private Integer peso;
 
     public Integer getPeso(){

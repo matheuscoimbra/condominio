@@ -1,9 +1,6 @@
 package com.br.condomio.apt.service;
 
-import com.br.condomio.apt.domain.Apartamento;
-import com.br.condomio.apt.domain.Aprovacao;
-import com.br.condomio.apt.domain.InquilinoSituacao;
-import com.br.condomio.apt.domain.Notificacao;
+import com.br.condomio.apt.domain.*;
 import com.br.condomio.apt.domain.enums.ObjetivoInquilino;
 import com.br.condomio.apt.domain.enums.StatusPessoa;
 import com.br.condomio.apt.dto.*;
@@ -12,6 +9,8 @@ import com.br.condomio.apt.service.exception.BusinessServiceException;
 import com.br.condomio.apt.service.exception.UnprocessableEntityException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,6 +45,8 @@ public class ApartamentoService {
     @Autowired
     private ConvidadoRepository convidadoRepository;
 
+    @Autowired
+    private NotificacaoRepository notificacaoRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -154,13 +155,21 @@ public class ApartamentoService {
 
     }
 
+    public List<Notificacao> notifies(String id) {
+
+        return notificacaoRepository.findAllByInquilino(id);
+    }
+
     public void notifyInquilino(String id, NotificacaoDTO notificacaoDTO) {
 
         var apt =  repository.findById(id).get();
         if(apt.getInquilino()!=null){
             var notificacao = mapper.map(notificacaoDTO, Notificacao.class);
-            apt.getNotificacaos().add(notificacao);
-            repository.save(apt);
+            notificacao.setInquilino(apt.getInquilino().getId());
+            notificacao.setApartamento(apt.getId());
+            notificacaoRepository.save(notificacao);
+            //apt.getNotificacaos().add(notificacao);
+            //repository.save(apt);
         }else{
             throw new RuntimeException("Apartamento sem inquilino");
         }

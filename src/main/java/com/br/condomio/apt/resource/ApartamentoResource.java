@@ -3,6 +3,7 @@ package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Aprovacao;
+import com.br.condomio.apt.domain.Notificacao;
 import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.service.ApartamentoService;
@@ -110,6 +111,17 @@ public class ApartamentoResource {
     public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody NotificacaoDTO notificacaoDTO){
         service.notifyInquilino(id,notificacaoDTO);
         return ResponseEntity.ok().build();
+    }
+    @Operation(summary = "retorna notificações de inquilino por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "notificações retornadas"
+            ),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
+    @GetMapping(value = "notify")
+    public ResponseEntity<List<Notificacao>> addInquilino(@Parameter(description = "id do inquilino") @RequestParam("inquilino")String inquilino){
+        return ResponseEntity.ok( service.notifies(inquilino));
     }
 
     @Operation(summary = "adiciona inquilino em apartamento por id")
