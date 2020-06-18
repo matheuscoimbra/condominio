@@ -229,8 +229,8 @@ public class PropriedadeService {
         return repository.findById(id).get();
     }
 
-    public List<Propriedade> getAllByNome(String nome) {
-        Propriedade propriedade = Propriedade.builder().nome(nome).build();
+    public List<Propriedade> getAllByNome(String nome, String cidade) {
+        Propriedade propriedade = Propriedade.builder().nome(nome).cidade(cidade).build();
         Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
         return repository.findAll(example);

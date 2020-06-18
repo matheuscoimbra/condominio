@@ -39,6 +39,7 @@ public class Propriedade implements Serializable {
 
     @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;
+    @JsonIgnore
     @DBRef
     private List<Bloco> blocos;
 

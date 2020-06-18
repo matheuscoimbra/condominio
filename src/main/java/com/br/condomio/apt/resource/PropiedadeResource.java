@@ -110,9 +110,9 @@ public class PropiedadeResource {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<Propriedade>> getAllByName(@RequestParam(value = "nome", required = false) String nome){
+    public ResponseEntity<List<Propriedade>> getAllByName(@RequestParam(value = "nome", required = false) String nome,@RequestParam(value = "cidade", required = false) String cidade){
 
-        return ResponseEntity.ok(service.getAllByNome(nome));
+        return ResponseEntity.ok(service.getAllByNome(nome,cidade));
     }
 
     @Operation(summary = "retorna lista de propriedades pelo nome que possuam sindico")
