@@ -66,7 +66,7 @@ public class PropiedadeResource {
                     content = @Content),
     })
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PostMapping("blocos")
+    @PostMapping("casas")
     public ResponseEntity<Propriedade> casas(@RequestBody @Valid CasaDTO condominio){
 
         return ResponseEntity.ok(service.saveCasa(condominio));
