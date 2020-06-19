@@ -3,6 +3,7 @@ package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.dto.BlocoDTO;
+import com.br.condomio.apt.dto.CasaDTO;
 import com.br.condomio.apt.dto.PredioDTO;
 import com.br.condomio.apt.dto.SindicoDTO;
 import com.br.condomio.apt.service.PropriedadeService;
@@ -55,6 +56,20 @@ public class PropiedadeResource {
     public ResponseEntity<Propriedade> blocos(@RequestBody @Valid BlocoDTO condominio){
 
         return ResponseEntity.ok(service.save(condominio));
+    }
+    @Operation(summary = "Cria propriedade do tipo casa")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "propriedade criada",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Propriedade.class))}),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("blocos")
+    public ResponseEntity<Propriedade> casas(@RequestBody @Valid CasaDTO condominio){
+
+        return ResponseEntity.ok(service.saveCasa(condominio));
     }
     @Operation(summary = "salva sindico em determinada propriedade")
     @ApiResponses(value = {

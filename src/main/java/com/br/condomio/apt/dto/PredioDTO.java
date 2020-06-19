@@ -45,11 +45,13 @@ public class PredioDTO implements Serializable {
 
     private String numero;
 
+    private String endereco;
+
+
     private String complemento;
 
     private String latitude;
 
     private String longitude;
-
 
 }

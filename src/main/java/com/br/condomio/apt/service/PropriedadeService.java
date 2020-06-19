@@ -4,6 +4,7 @@ import com.br.condomio.apt.domain.*;
 import com.br.condomio.apt.domain.enums.Arquitetura;
 import com.br.condomio.apt.domain.PropriedadeProp;
 import com.br.condomio.apt.dto.BlocoDTO;
+import com.br.condomio.apt.dto.CasaDTO;
 import com.br.condomio.apt.dto.PredioDTO;
 import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.*;
@@ -44,6 +45,62 @@ public class PropriedadeService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+
+    @SneakyThrows
+    public Propriedade saveCasa(CasaDTO dto){
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        var condominio = modelMapper.map(dto, Propriedade.class);
+        var str  = mapper.writeValueAsString(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        var obj = mapper.readValue(str,UserSS.class);
+        Admin admin = adminRepository.findAdminByCpf(obj.getUsername()).get();
+        condominio.setQuantidadeApartamento(dto.getQuantidadeCasa());
+        condominio.setArquitetura(Arquitetura.CASA);
+        condominio.setQuantidadeAndar(1);
+        Integer quantidadeApartamentos = condominio.getQuantidadeApartamento();
+        Integer quantidadeAndares = 1;
+        String prefixoBloco = condominio.getArquitetura().getDescricao();
+        String StartAp = condominio.getStart();
+        List<Bloco> blocoList = new ArrayList<>();
+        int leftpad = 0;
+        if( condominio.getStart().equals("00")){
+            leftpad = 1;
+        }
+        if( condominio.getStart().equals("000")){
+            leftpad = 2;
+        }
+
+        String hash = RandomStringUtils.random(6, true, true);
+
+        List<Apartamento> apartamentoList = new ArrayList<>();
+
+        for (int j = 0; j < quantidadeAndares; j++) {
+
+            for (int k = 0; k < quantidadeApartamentos ; k++) {
+
+                Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj()).buscadorBloco(hash)
+                        .andar(j+1).nome("Sala" +String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
+                apartamentoList.add(apartamento);
+            }
+
+        }
+        apartamentoList = apartamentoRepository.saveAll(apartamentoList);
+
+        Bloco bloco = Bloco.builder().buscadorBloco(hash).apartamentos(apartamentoList).nome(prefixoBloco+"_1").build();
+        blocoList.add(bloco);
+
+        blocoList = blocoRepository.saveAll(blocoList);
+        condominio.setBlocos(blocoList);
+        condominio.setPropietario(admin.getCpf());
+        var condo = repository.save(condominio);
+        admin.getCondominiosId().add(condo.getId());
+        adminRepository.save(admin);
+
+        return condo;
+    }
+
 
 
     @SneakyThrows

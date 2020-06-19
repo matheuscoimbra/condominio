@@ -2,7 +2,7 @@ package com.br.condomio.apt.domain.enums;
 
 public enum Arquitetura {
 
-    BLOCO(1, "BLOCO"), PREDIO(2, "PREDIO");
+    BLOCO(1, "BLOCO"), PREDIO(2, "PREDIO"),CASA(1, "CASA");
 
     private int cod;
     private String description;

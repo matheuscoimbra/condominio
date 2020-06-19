@@ -39,6 +39,7 @@ public class Propriedade implements Serializable {
 
     @NotNull(message = "Informe a arquitetura")
     private Arquitetura arquitetura;
+
     @JsonIgnore
     @DBRef
     private List<Bloco> blocos;
@@ -65,6 +66,8 @@ public class Propriedade implements Serializable {
     private String cep;
 
     private String numero;
+
+    private String endereco;
 
     private String complemento;
 
