@@ -2,10 +2,7 @@ package com.br.condomio.apt.resource;
 
 
 import com.br.condomio.apt.domain.Propriedade;
-import com.br.condomio.apt.dto.BlocoDTO;
-import com.br.condomio.apt.dto.CasaDTO;
-import com.br.condomio.apt.dto.PredioDTO;
-import com.br.condomio.apt.dto.SindicoDTO;
+import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.service.PropriedadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -125,7 +122,7 @@ public class PropiedadeResource {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<Propriedade>> getAllByName(@RequestParam(value = "nome", required = false) String nome,@RequestParam(value = "cidade", required = false) String cidade){
+    public ResponseEntity<PropriedadeSearchDTO> getAllByName(@RequestParam(value = "nome", required = false) String nome,@RequestParam(value = "cidade", required = false) String cidade){
 
         return ResponseEntity.ok(service.getAllByNome(nome,cidade));
     }
@@ -138,7 +135,7 @@ public class PropiedadeResource {
                     content = @Content),
     })
     @GetMapping("/inquilino/todos")
-    public ResponseEntity<List<Propriedade>> getAllByNameSindico(@RequestParam(value = "nome", required = false) String nome,@RequestParam(value = "cidade", required = false) String cidade){
+    public ResponseEntity<PropriedadeSearchDTO> getAllByNameSindico(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "cidade", required = false) String cidade){
 
         return ResponseEntity.ok(service.getNomeSindicoNotNull(nome,cidade));
     }

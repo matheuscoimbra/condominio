@@ -3,6 +3,7 @@ package com.br.condomio.apt.resource;
 
 import com.br.condomio.apt.domain.Convidado;
 import com.br.condomio.apt.dto.ApartamentoDTO;
+import com.br.condomio.apt.dto.ArquiteturaDTO;
 import com.br.condomio.apt.dto.BlocoDTO;
 import com.br.condomio.apt.service.ApartamentoService;
 import com.br.condomio.apt.service.BlocoService;
@@ -26,7 +27,7 @@ public class BlocoResource {
     @Autowired
     private BlocoService service;
 
-    @Operation(summary = "retorna todos os blocos de determinada propriedade (condominio)")
+    @Operation(summary = "retorna todos os blocos de determinada propriedade (condominio)/ Ou salas (prédio) ou Casas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "blocos retornados",
                     content = {@Content(mediaType = "application/json",
@@ -35,10 +36,18 @@ public class BlocoResource {
                     content = @Content),
     })
     @GetMapping()
-    public ResponseEntity<List<BlocoDTO>> getAll(@Parameter(description = "id da propriedade") @RequestParam("condominio") String id){
+    public ResponseEntity<ArquiteturaDTO> getAll(@Parameter(description = "id da propriedade") @RequestParam("condominio") String id){
 
        return ResponseEntity.ok(service.getAll(id));
     }
+
+
+
+
+
+
+
+
     @Operation(summary = "muda nome do bloco")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "nome alterado"

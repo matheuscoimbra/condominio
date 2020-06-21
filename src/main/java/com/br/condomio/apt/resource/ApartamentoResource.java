@@ -40,6 +40,22 @@ public class ApartamentoResource {
        return ResponseEntity.ok(service.getAllByBloco(id));
     }
 
+
+    @Operation(summary = "Retorna todos apartamentos/salas por andas para arquiteturas (PREDIO/BLOCOS)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "retorna apartamentos"
+            ),
+            @ApiResponse(responseCode = "500", description = "gerou exceção",
+                    content = @Content),
+    })
+    @GetMapping("all/andar")
+    public ResponseEntity<List<ApartamentoDTO>> getAllByAndar(@Parameter(description = "nº do andar") @RequestParam(value = "andar", required = true) Integer andar,
+                                                              @Parameter(description = "id blocor") @RequestParam(value = "bloco", required = false) String bloco,
+                                                              @Parameter(description = "prop condomioCnpj") @RequestParam(value = "condomioCnpj", required = false) String condomioCnpj){
+
+        return ResponseEntity.ok(service.getAllByAndar(condomioCnpj,bloco,andar));
+    }
+
     @PostMapping("change/between")
     public ResponseEntity<List<ApartamentoDTO>> changeBetween(@RequestBody ChangeBetweenDTO changeBetweenDTO){
         return ResponseEntity.ok(service.changeBetWeen(changeBetweenDTO));
@@ -100,29 +116,7 @@ public class ApartamentoResource {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "notifica apartamento por id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "notificação feita"
-            ),
-            @ApiResponse(responseCode = "500", description = "gerou exceção",
-                    content = @Content),
-    })
-    @PostMapping(value = "{id}/notify")
-    public ResponseEntity<?> addInquilino(@PathVariable("id")String id,@RequestBody NotificacaoDTO notificacaoDTO){
-        service.notifyInquilino(id,notificacaoDTO);
-        return ResponseEntity.ok().build();
-    }
-    @Operation(summary = "retorna notificações de inquilino por id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "notificações retornadas"
-            ),
-            @ApiResponse(responseCode = "500", description = "gerou exceção",
-                    content = @Content),
-    })
-    @GetMapping(value = "notify")
-    public ResponseEntity<List<Notificacao>> addInquilino(@Parameter(description = "id do inquilino") @RequestParam("inquilino")String inquilino){
-        return ResponseEntity.ok( service.notifies(inquilino));
-    }
+
 
     @Operation(summary = "adiciona inquilino em apartamento por id")
     @ApiResponses(value = {

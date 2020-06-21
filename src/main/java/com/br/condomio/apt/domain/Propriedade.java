@@ -79,6 +79,9 @@ public class Propriedade implements Serializable {
 
     private boolean comPorteiro;
 
+    private Integer buscados;
+
+
 
 
 }

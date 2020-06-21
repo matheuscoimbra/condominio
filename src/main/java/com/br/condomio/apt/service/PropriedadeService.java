@@ -6,6 +6,7 @@ import com.br.condomio.apt.domain.PropriedadeProp;
 import com.br.condomio.apt.dto.BlocoDTO;
 import com.br.condomio.apt.dto.CasaDTO;
 import com.br.condomio.apt.dto.PredioDTO;
+import com.br.condomio.apt.dto.PropriedadeSearchDTO;
 import com.br.condomio.apt.jwt.UserSS;
 import com.br.condomio.apt.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PropriedadeService {
@@ -94,6 +97,8 @@ public class PropriedadeService {
         blocoList = blocoRepository.saveAll(blocoList);
         condominio.setBlocos(blocoList);
         condominio.setPropietario(admin.getCpf());
+        condominio.setBuscados(0);
+
         var condo = repository.save(condominio);
         admin.getCondominiosId().add(condo.getId());
         adminRepository.save(admin);
@@ -136,7 +141,7 @@ public class PropriedadeService {
                 for (int k = 0; k < quantidadeApartamentos ; k++) {
 
                     Apartamento apartamento = Apartamento.builder().condomioCnpj(condominio.getCnpj()).buscadorBloco(hash)
-                            .andar(j+1).nome("Sala" +String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
+                            .andar(j+1).nome("Sala" + (j + 1) +StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
                     apartamentoList.add(apartamento);
                 }
 
@@ -149,6 +154,8 @@ public class PropriedadeService {
         blocoList = blocoRepository.saveAll(blocoList);
         condominio.setBlocos(blocoList);
         condominio.setPropietario(admin.getCpf());
+        condominio.setBuscados(0);
+
         var condo = repository.save(condominio);
         admin.getCondominiosId().add(condo.getId());
         adminRepository.save(admin);
@@ -192,7 +199,7 @@ public class PropriedadeService {
                 for (int k = 0; k < quantidadeApartamentos ; k++) {
 
                     Apartamento apartamento = Apartamento.builder().buscadorBloco(hash).condomioCnpj(condominio.getCnpj())
-                            .andar(j+1).nome(String.valueOf(j+1)+StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
+                            .andar(j+1).nome((j + 1) +StringUtils.leftPad(String.valueOf(k), leftpad, "0")).build();
                     apartamentoList.add(apartamento);
                 }
 
@@ -205,6 +212,7 @@ public class PropriedadeService {
         blocoList = blocoRepository.saveAll(blocoList);
         condominio.setBlocos(blocoList);
         condominio.setPropietario(admin.getCpf());
+        condominio.setBuscados(0);
         var condo = repository.save(condominio);
         admin.getCondominiosId().add(condo.getId());
         adminRepository.save(admin);
@@ -283,25 +291,54 @@ public class PropriedadeService {
 
 
     public Propriedade getById(String id) {
-        return repository.findById(id).get();
+
+
+        Propriedade propriedade =  repository.findById(id).get();
+
+        if(propriedade.getBuscados()==null || propriedade.getBuscados()==0){
+            propriedade.setBuscados(1);
+        }else{
+            propriedade.setBuscados(propriedade.getBuscados()+1);
+        }
+        repository.save(propriedade);
+        return propriedade;
     }
 
-    public List<Propriedade> getAllByNome(String nome, String cidade) {
+    public PropriedadeSearchDTO getAllByNome(String nome, String cidade) {
+        PropriedadeSearchDTO searchDTO = new PropriedadeSearchDTO();
         Propriedade propriedade = Propriedade.builder().nome(nome).cidade(cidade).build();
         Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.
                 matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
-        return repository.findAll(example);
+        List<Propriedade> propriedades = repository.findAll(example);
+        searchDTO.getPropriedades().addAll(propriedades);
+
+        List<Propriedade> maisBuscados = propriedades.stream()
+                .sorted(Comparator.comparingInt(Propriedade::getBuscados)
+                        .reversed())
+                .collect(Collectors.toList()).stream().limit(5).collect(Collectors.toList());
+        searchDTO.getMaisProcurados().addAll(maisBuscados);
+        return searchDTO;
+
     }
 
-    public List<Propriedade> getNomeSindicoNotNull(String nome,String cidade) {
+    public PropriedadeSearchDTO getNomeSindicoNotNull(String nome,String cidade) {
+        PropriedadeSearchDTO searchDTO = new PropriedadeSearchDTO();
         Propriedade propriedade = Propriedade.builder().nome(nome).cidade(cidade).comSindico(true).build();
         Example<Propriedade> example = Example.of(propriedade, ExampleMatcher.
                 matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase());
-        return repository.findAll(example);
+        List<Propriedade> propriedades = repository.findAll(example);
+        searchDTO.getPropriedades().addAll(propriedades);
+
+        List<Propriedade> maisBuscados = propriedades.stream()
+                .sorted(Comparator.comparingInt(Propriedade::getBuscados)
+                        .reversed())
+                .collect(Collectors.toList()).stream().limit(5).collect(Collectors.toList());
+        searchDTO.getMaisProcurados().addAll(maisBuscados);
+        return searchDTO;
 
     }
 }

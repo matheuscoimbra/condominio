@@ -7,6 +7,7 @@ import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.*;
 import com.br.condomio.apt.service.exception.BusinessServiceException;
 import com.br.condomio.apt.service.exception.UnprocessableEntityException;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -46,9 +47,6 @@ public class ApartamentoService {
     private ConvidadoRepository convidadoRepository;
 
     @Autowired
-    private NotificacaoRepository notificacaoRepository;
-
-    @Autowired
     private ModelMapper mapper;
 
     public Apartamento findById(String id){
@@ -57,6 +55,20 @@ public class ApartamentoService {
 
     public List<ApartamentoDTO> getAllByBloco(String id) {
         return blocoRepository.findById(id).get().getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public List<ApartamentoDTO> getAllByAndar(String cnpjCondominio,String blocoId, Integer andar) {
+        List<ApartamentoDTO> apartamentoDTOS = new ArrayList<>();
+        if(StringUtils.isNoneBlank(blocoId)){
+            blocoRepository.findById(blocoId).ifPresent(bloco -> {
+                apartamentoDTOS.addAll(repository.findAllByAndarAndBuscadorBloco(andar,bloco.getBuscadorBloco()).stream().map(this::toDTO).collect(Collectors.toList()));
+            });
+        }else if(StringUtils.isNoneBlank(cnpjCondominio)){
+            blocoRepository.findById(blocoId).ifPresent(bloco -> {
+                apartamentoDTOS.addAll(repository.findAllByAndarAndCondomioCnpj(andar,cnpjCondominio).stream().map(this::toDTO).collect(Collectors.toList()));
+            });
+        }
+        return apartamentoDTOS;
     }
 
     public void saveInquilino(String id, InquilinoDTO inquilinoDTO) {
@@ -155,25 +167,8 @@ public class ApartamentoService {
 
     }
 
-    public List<Notificacao> notifies(String id) {
 
-        return notificacaoRepository.findAllByInquilino(id);
-    }
 
-    public void notifyInquilino(String id, NotificacaoDTO notificacaoDTO) {
-
-        var apt =  repository.findById(id).get();
-        if(apt.getInquilino()!=null){
-            var notificacao = mapper.map(notificacaoDTO, Notificacao.class);
-            notificacao.setInquilino(apt.getInquilino().getId());
-            notificacao.setApartamento(apt.getId());
-            notificacaoRepository.save(notificacao);
-            //apt.getNotificacaos().add(notificacao);
-            //repository.save(apt);
-        }else{
-            throw new RuntimeException("Apartamento sem inquilino");
-        }
-    }
 
     public List<ApartamentoDTO> changeBetWeen(ChangeBetweenDTO changeBetweenDTO) {
         var aptFrom =  repository.findById(changeBetweenDTO.getGetApartementoIdFrom()).get();
@@ -238,4 +233,6 @@ public class ApartamentoService {
                 ()->{throw new RuntimeException();});
 
     }
+
+
 }
