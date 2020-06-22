@@ -127,7 +127,10 @@ public class ApartamentoService {
 
 
     public ApartamentoDTO toDTO(Apartamento apartamento){
-        return mapper.map(apartamento, ApartamentoDTO.class);
+        var apt =  mapper.map(apartamento, ApartamentoDTO.class);
+        var inq = mapper.map(apartamento.getInquilino(),InquilinoDTO.class);
+        apt.setInquilino(inq);
+        return apt;
     }
 
     public void changeName(String id, String name) {

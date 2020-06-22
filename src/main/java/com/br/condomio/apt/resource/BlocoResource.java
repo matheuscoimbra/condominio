@@ -31,12 +31,12 @@ public class BlocoResource {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "blocos retornados",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Convidado.class))}),
+                            schema = @Schema(implementation = ArquiteturaDTO.class))}),
             @ApiResponse(responseCode = "500", description = "gerou exceção",
                     content = @Content),
     })
     @GetMapping()
-    public ResponseEntity<ArquiteturaDTO> getAll(@Parameter(description = "id da propriedade") @RequestParam("condominio") String id){
+    public ResponseEntity<ArquiteturaDTO> getAll(@Parameter(description = "id da propriedade") @RequestParam("propriedade") String id){
 
        return ResponseEntity.ok(service.getAll(id));
     }

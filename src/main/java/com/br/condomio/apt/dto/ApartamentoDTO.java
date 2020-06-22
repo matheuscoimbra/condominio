@@ -2,6 +2,7 @@ package com.br.condomio.apt.dto;
 
 import com.br.condomio.apt.domain.Inquilino;
 import com.br.condomio.apt.domain.Notificacao;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class ApartamentoDTO implements Serializable {
 
     private Integer andar;
 
-    private Inquilino inquilino;
+    private InquilinoDTO inquilino;
 
     private List<Notificacao> notificacaos = new ArrayList<>();
 }

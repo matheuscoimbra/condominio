@@ -7,6 +7,7 @@ import com.br.condomio.apt.domain.enums.Arquitetura;
 import com.br.condomio.apt.dto.ApartamentoDTO;
 import com.br.condomio.apt.dto.ArquiteturaDTO;
 import com.br.condomio.apt.dto.BlocoDTO;
+import com.br.condomio.apt.dto.InquilinoDTO;
 import com.br.condomio.apt.repository.BlocoRepository;
 import com.br.condomio.apt.repository.PropriedadeRepository;
 import com.br.condomio.apt.service.exception.ObjectNotFoundException;
@@ -44,7 +45,10 @@ public class BlocoService {
     }
 
     public ApartamentoDTO toDTO(Apartamento apartamento){
-        return mapper.map(apartamento, ApartamentoDTO.class);
+        var apt =  mapper.map(apartamento, ApartamentoDTO.class);
+        var inq = mapper.map(apartamento.getInquilino(), InquilinoDTO.class);
+        apt.setInquilino(inq);
+        return apt;
     }
 
 
