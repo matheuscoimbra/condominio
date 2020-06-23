@@ -4,10 +4,7 @@ import com.br.condomio.apt.domain.Apartamento;
 import com.br.condomio.apt.domain.Bloco;
 import com.br.condomio.apt.domain.Propriedade;
 import com.br.condomio.apt.domain.enums.Arquitetura;
-import com.br.condomio.apt.dto.ApartamentoDTO;
-import com.br.condomio.apt.dto.ArquiteturaDTO;
-import com.br.condomio.apt.dto.BlocoDTO;
-import com.br.condomio.apt.dto.InquilinoDTO;
+import com.br.condomio.apt.dto.*;
 import com.br.condomio.apt.repository.BlocoRepository;
 import com.br.condomio.apt.repository.PropriedadeRepository;
 import com.br.condomio.apt.service.exception.ObjectNotFoundException;
@@ -44,8 +41,8 @@ public class BlocoService {
         return result.get();
     }
 
-    public ApartamentoDTO toDTO(Apartamento apartamento){
-        var apt =  mapper.map(apartamento, ApartamentoDTO.class);
+    public ApartamentoRespDTO toDTO(Apartamento apartamento){
+        var apt =  mapper.map(apartamento, ApartamentoRespDTO.class);
         var inq = mapper.map(apartamento.getInquilino(), InquilinoDTO.class);
         apt.setInquilino(inq);
         return apt;
@@ -58,15 +55,15 @@ public class BlocoService {
                 (prop) -> {
 
                     if(prop.getArquitetura().equals(Arquitetura.BLOCO)){
-                       List<BlocoDTO> blocos =  prop.getBlocos().stream().map(this::toDTO).collect(Collectors.toList());
+                       List<Bloco> blocos =  prop.getBlocos();
                        arquiteturaDTO.setBlocos(blocos);
                        arquiteturaDTO.setProximaEtapa(true);
                     }else if(prop.getArquitetura().equals(Arquitetura.PREDIO)){
-                        List<ApartamentoDTO> salas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+                        List<ApartamentoRespDTO> salas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
                         arquiteturaDTO.setSalas(salas);
                         arquiteturaDTO.setProximaEtapa(false);
                     }else if(prop.getArquitetura().equals(Arquitetura.CASA)){
-                        List<ApartamentoDTO> casas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+                        List<ApartamentoRespDTO> casas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
                         arquiteturaDTO.setSalas(casas);
                         arquiteturaDTO.setProximaEtapa(false);
                     }

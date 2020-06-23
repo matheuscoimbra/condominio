@@ -1,5 +1,6 @@
 package com.br.condomio.apt.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Bloco {
     private String buscadorBloco;
 
     private String nome;
+    @JsonIgnore
     @DBRef
     private List<Apartamento> apartamentos;
 }

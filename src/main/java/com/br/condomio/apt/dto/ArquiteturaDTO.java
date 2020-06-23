@@ -1,5 +1,6 @@
 package com.br.condomio.apt.dto;
 
+import com.br.condomio.apt.domain.Bloco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ArquiteturaDTO implements Serializable {
 
-    private List<BlocoDTO> blocos;
+    private List<Bloco> blocos;
 
     @JsonIgnoreProperties({"notificacaos"})
-    private List<ApartamentoDTO> salas;
+    private List<ApartamentoRespDTO> salas;
     @JsonIgnoreProperties({"notificacaos"})
-    private List<ApartamentoDTO> casas;
+    private List<ApartamentoRespDTO> casas;
 
 
     private Boolean proximaEtapa;
