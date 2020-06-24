@@ -41,10 +41,20 @@ public class BlocoService {
         return result.get();
     }
 
-    public ApartamentoRespDTO toDTO(Apartamento apartamento){
-        var apt =  mapper.map(apartamento, ApartamentoRespDTO.class);
-        var inq = mapper.map(apartamento.getInquilino(), InquilinoDTO.class);
-        apt.setInquilino(inq);
+    public LugarArquiteturaDTO toDTO(Apartamento apartamento){
+        LugarArquiteturaDTO apt = new LugarArquiteturaDTO();
+        apt.setId(apartamento.getId());
+        apt.setNome(apartamento.getNome());
+        apt.setAndar(apartamento.getAndar());
+        apt.setTemMorador(apartamento.getInquilino()!=null?true:false);
+        return apt;
+    }
+
+    public LugarArquiteturaDTO fromBlocoDTO(Bloco bloco){
+        LugarArquiteturaDTO apt = new LugarArquiteturaDTO();
+        apt.setId(bloco.getId());
+        apt.setNome(bloco.getNome());
+        apt.setTemMorador(false);
         return apt;
     }
 
@@ -55,17 +65,20 @@ public class BlocoService {
                 (prop) -> {
 
                     if(prop.getArquitetura().equals(Arquitetura.BLOCO)){
-                       List<Bloco> blocos =  prop.getBlocos();
-                       arquiteturaDTO.setBlocos(blocos);
-                       arquiteturaDTO.setProximaEtapa(true);
+                       List<LugarArquiteturaDTO> blocos =  prop.getBlocos().stream().map(this::fromBlocoDTO).collect(Collectors.toList());
+                       arquiteturaDTO.setArquiteturas(blocos);
+                       arquiteturaDTO.setTipo(Arquitetura.BLOCO);
+                       arquiteturaDTO.setTemProximaEtapa(true);
                     }else if(prop.getArquitetura().equals(Arquitetura.PREDIO)){
-                        List<ApartamentoRespDTO> salas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
-                        arquiteturaDTO.setSalas(salas);
-                        arquiteturaDTO.setProximaEtapa(false);
+                        List<LugarArquiteturaDTO> predio =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+                        arquiteturaDTO.setArquiteturas(predio);
+                        arquiteturaDTO.setTipo(Arquitetura.PREDIO);
+                        arquiteturaDTO.setTemProximaEtapa(false);
                     }else if(prop.getArquitetura().equals(Arquitetura.CASA)){
-                        List<ApartamentoRespDTO> casas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
-                        arquiteturaDTO.setSalas(casas);
-                        arquiteturaDTO.setProximaEtapa(false);
+                        List<LugarArquiteturaDTO> casas =  prop.getBlocos().get(1).getApartamentos().stream().map(this::toDTO).collect(Collectors.toList());
+                        arquiteturaDTO.setArquiteturas(casas);
+                        arquiteturaDTO.setTipo(Arquitetura.CASA);
+                        arquiteturaDTO.setTemProximaEtapa(false);
                     }
                 },
                 () ->{ throw new ObjectNotFoundException("Propriedade inexistente");}
