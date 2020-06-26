@@ -317,7 +317,7 @@ public class PropriedadeService {
         List<Propriedade> maisBuscados = propriedades.stream()
                 .sorted(Comparator.comparingInt(Propriedade::getBuscados)
                         .reversed())
-                .collect(Collectors.toList()).stream().limit(5).collect(Collectors.toList());
+                .collect(Collectors.toList()).stream().filter(propriedade1 -> propriedade.getBuscados()>0).limit(5).collect(Collectors.toList());
         searchDTO.getMaisProcurados().addAll(maisBuscados);
         return searchDTO;
 
@@ -336,7 +336,7 @@ public class PropriedadeService {
         List<Propriedade> maisBuscados = propriedades.stream()
                 .sorted(Comparator.comparingInt(Propriedade::getBuscados)
                         .reversed())
-                .collect(Collectors.toList()).stream().limit(5).collect(Collectors.toList());
+                .collect(Collectors.toList()).stream().filter(propriedade1 -> propriedade.getBuscados()>0).limit(5).collect(Collectors.toList());
         searchDTO.getMaisProcurados().addAll(maisBuscados);
         return searchDTO;
 
